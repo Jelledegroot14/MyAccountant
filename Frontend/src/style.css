@@ -75,3 +75,7 @@
   nav button:hover {
     background-color: var(--gris-claro);
   }
+  #vite-plugin-checker-error-overlay, 
+.vite-client-error-overlay {
+    display: none !important;
+}

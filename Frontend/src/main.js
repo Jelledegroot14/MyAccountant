@@ -1,3 +1,4 @@
+import './style.css';
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const mensaje = document.getElementById('mensaje');
