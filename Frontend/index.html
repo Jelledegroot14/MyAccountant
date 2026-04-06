@@ -1,13 +1,40 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="es">
   <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vite App</title>
-  </head>
+    <title>MyAccountant - Login</title>
+    <link rel="stylesheet" href="/Frontend/src/style.css">
+    </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <nav>
+          <button onclick="mostrar('seccion-login')">Ir a Login</button>
+          <button onclick="mostrar('seccion-registro')">Ir a Registro</button>
+      </nav>
+  
+      <div id="seccion-login" class="formulario">
+          <h2>Iniciar Sesión</h2>
+          <form id="loginForm">
+              <input type="email" id="login-email" placeholder="Email" required>
+              <input type="password" id="login-password" placeholder="Contraseña" required>
+              <button type="submit">Entrar</button>
+          </form>
+      </div>
+  
+      <div id="seccion-registro" class="formulario" style="display:none;">
+          <h2>Crear Cuenta</h2>
+          <form id="registerForm">
+              <input type="text" id="reg-nombre" placeholder="Nombre completo" required>
+              <input type="email" id="reg-email" placeholder="Email" required>
+              <input type="password" id="reg-password" placeholder="Contraseña (mín. 8 caracteres)" required>
+              <button type="submit">Registrarse</button>
+          </form>
+      </div>
+      
+      <p id="mensaje"></p>
+  </div>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
