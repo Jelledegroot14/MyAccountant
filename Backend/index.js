@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./db'); 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
@@ -9,6 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
+
+//Ruta Login
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     
@@ -22,38 +25,42 @@ app.post('/login', async (req, res) => {
       const matches = stringData.match(/{[^[\]]+}/g); 
   
       if (!matches) {
-        return res.status(500).json({ error: "No se encontró un objeto de usuario válido" });
+        return res.status(500).json({ error: "No se encontró un objeto válido" });
       }
-
+  
       const user = JSON.parse(matches);
   
-      console.log("--- LOGIN FINAL ---");
-      console.log("Usuario rescatado:", user.email);
-      console.log("¿Tiene password?:", user.password ? "SÍ" : "NO");
-  
-      if (!user.password) {
-        return res.status(500).json({ error: "El objeto rescatado no tiene contraseña" });
-      }
       const match = await bcrypt.compare(password, user.password);
   
       if (!match) {
         return res.status(400).json({ error: "Contraseña incorrecta" });
       }
   
+      const token = jwt.sign(
+        { id: user.id, email: user.email }, 
+        process.env.JWT_SECRET, 
+        { expiresIn: '2h' } 
+      );
+  
       return res.json({ 
         message: "¡Bienvenido!", 
-        user: { id: user.id, nombre: user.nombre } 
+        token: token, 
+        user: { 
+          id: user.id, 
+          nombre: user.nombre,
+          email: user.email
+        } 
       });
   
     } catch (err) {
-      console.error("ERROR:", err);
+      console.error("ERROR EN LOGIN:", err);
       if (!res.headersSent) {
         return res.status(500).json({ error: "Error en el servidor" });
       }
     }
   });
 
-// RUTA REGISTRO
+//Ruta Registro
 app.post('/register', async (req, res) => {
     const { nombre, email, password } = req.body;
     try {
