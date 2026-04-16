@@ -1,40 +1,68 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
+<head>
     <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyAccountant - Login</title>
-    <link rel="stylesheet" href="/Frontend/src/style.css">
-    </head>
-  <body>
+    <title>MyAccountant</title>
+    <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
     <div id="app">
-      <nav>
-          <button onclick="mostrar('seccion-login')">Ir a Login</button>
-          <button onclick="mostrar('seccion-registro')">Ir a Registro</button>
-      </nav>
-  
-      <div id="seccion-login" class="formulario">
-          <h2>Iniciar Sesión</h2>
-          <form id="loginForm">
-              <input type="email" id="login-email" placeholder="Email" required>
-              <input type="password" id="login-password" placeholder="Contraseña" required>
-              <button type="submit">Entrar</button>
-          </form>
-      </div>
-  
-      <div id="seccion-registro" class="formulario" style="display:none;">
-          <h2>Crear Cuenta</h2>
-          <form id="registerForm">
-              <input type="text" id="reg-nombre" placeholder="Nombre completo" required>
-              <input type="email" id="reg-email" placeholder="Email" required>
-              <input type="password" id="reg-password" placeholder="Contraseña (mín. 8 caracteres)" required>
-              <button type="submit">Registrarse</button>
-          </form>
-      </div>
-      
-      <p id="mensaje"></p>
-  </div>
+        <nav>
+            <button onclick="mostrar('seccion-login')">Login</button>
+            <button onclick="mostrar('seccion-registro')">Registro</button>
+        </nav>
+
+        <div id="mensaje" style="text-align: center; margin: 10px;"></div>
+
+        <div id="seccion-login" class="formulario">
+            <h2>Iniciar Sesión</h2>
+            <form id="loginForm">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Contraseña" required>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
+
+        <div id="seccion-registro" class="formulario" style="display:none;">
+            <h2>Crear Cuenta</h2>
+            <form id="registerForm">
+                <input type="text" id="reg-nombre" placeholder="Nombre" required>
+                <input type="email" id="reg-email" placeholder="Email" required>
+                <input type="password" id="reg-password" placeholder="Contraseña" required>
+                <button type="submit">Registrarse</button>
+            </form>
+        </div>
+
+        <div id="seccion-movimientos" class="formulario" style="display:none;">
+          <div id="balance-container" style="background: #f4f4f4; padding: 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;">
+            <h3>Tu Saldo Actual</h3>
+            <h1 id="saldo-total">0.00€</h1>
+            <div style="display: flex; justify-content: space-around; margin-top: 10px;">
+                <p style="color: green;">Ingresos: <span id="total-ingresos">0€</span></p>
+                <p style="color: red;">Gastos: <span id="total-gastos">0€</span></p>
+            </div>
+        </div>
+            <h2>Nuevo Movimiento</h2>
+            <form id="transaccionForm">
+                <input type="text" id="concepto" placeholder="Concepto" required>
+                <input type="number" id="monto" placeholder="Importe" step="0.01" required>
+                <select id="tipo">
+                    <option value="gasto">Gasto</option>
+                    <option value="ingreso">Ingreso</option>
+                </select>
+                <select id="categoria">
+                    <option value="Alimentación">Alimentación</option>
+                    <option value="Ocio">Ocio</option>
+                    <option value="Otros">Otros</option>
+                </select>
+                <button type="submit">Guardar</button>
+            </form>
+            <div style="margin-top: 20px;">
+                <h3>Historial</h3>
+                <ul id="lista-transacciones"></ul>
+            </div>
+        </div>
+    </div>
     <script type="module" src="/src/main.js"></script>
-  </body>
+</body>
 </html>

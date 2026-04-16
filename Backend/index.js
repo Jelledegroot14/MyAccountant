@@ -72,4 +72,50 @@ app.post('/register', async (req, res) => {
     }
 });
 
+app.post('/transacciones', async (req, res) => {
+  const { usuario_id, concepto, monto, tipo, categoria } = req.body;
+  
+  try {
+      const query = `
+          INSERT INTO transacciones (usuario_id, concepto, monto, tipo, categoria) 
+          VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+      
+      const values = [usuario_id, concepto, monto, tipo, categoria || 'General'];
+      const result = await pool.query(query, values);
+      
+      res.status(201).json(result.rows); 
+  } catch (err) {
+      console.error("Error al guardar:", err);
+      res.status(500).json({ error: "No se pudo guardar el movimiento" });
+  }
+});
+  
+app.get('/transacciones/:usuario_id', async (req, res) => {
+  const { usuario_id } = req.params;
+  try {
+      const result = await pool.query(
+          'SELECT * FROM transacciones WHERE usuario_id = $1 ORDER BY fecha DESC', 
+          [usuario_id]
+      );
+      res.json(result.rows);
+  } catch (err) {
+      res.status(500).json({ error: "Error al obtener los datos" });
+  }
+  //Borrar Transaccion
+  app.delete('/transacciones/:id', async (req, res) => {
+    const { id } = req.params; 
+    try {
+        const result = await pool.query('DELETE FROM transacciones WHERE id = $1', [id]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "No se encontró el registro" });
+        }
+        
+        res.json({ message: "Registro eliminado con éxito" });
+    } catch (err) {
+        console.error("Error al borrar:", err);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+  });
+});
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
