@@ -1,81 +1,144 @@
 :root {
-    --azul-primario: #0056b3; 
-    --gris-claro: #f8f9fa;  
-    --blanco: #ffffff;
-    --texto: #333333;
-  }
-  
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #e9ecef;
-    color: var(--texto);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  .login-container, .formulario {
-    background-color: var(--blanco);
-    padding: 40px;
-    border-radius: 15px; 
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
-    border: 1px solid #dee2e6;
-  }
-  
-  h2 {
-    color: var(--azul-primario);
-    text-align: center;
-    font-weight: 600;
-    margin-bottom: 25px;
-  }
-  
-  input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ced4da;
-    border-radius: 8px; 
-    background-color: var(--gris-claro);
-    box-sizing: border-box;
-  }
-  
-  button {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--azul-primario);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  
-  button:hover {
-    background-color: #004494;
-  }
-  
-  nav {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  nav button {
-    background-color: transparent;
-    color: var(--azul-primario);
-    border: 1px solid var(--azul-primario);
-    width: auto;
-  }
-  
-  nav button:hover {
-    background-color: var(--gris-claro);
-  }
-  #vite-plugin-checker-error-overlay, 
-.vite-client-error-overlay {
-    display: none !important;
+  --azul-primario: #0056b3; 
+  --azul-hover: #004494;
+  --gris-claro: #f8f9fa;  
+  --blanco: #ffffff;
+  --texto: #333333;
+  --verde-exito: #28a745;
+  --rojo-error: #dc3545;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  color: var(--texto);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  min-height: 100vh;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.login-container, .formulario {
+  background-color: var(--blanco);
+  padding: 30px;
+  border-radius: 15px; 
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 450px;
+  border: 1px solid #e1e4e8;
+}
+
+.balance-card {
+  background: linear-gradient(135deg, var(--azul-primario), #007bff);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.balance-card h3 { margin: 0; font-size: 0.85rem; opacity: 0.9; text-transform: uppercase; }
+.balance-card #saldo-total { font-size: 2.5rem; margin: 10px 0; font-weight: bold; }
+
+#lista-transacciones {
+  list-style: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+#lista-transacciones li {
+  background: var(--gris-claro);
+  margin-bottom: 10px;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-left: 5px solid #ccc; 
+  transition: transform 0.2s;
+}
+
+#lista-transacciones li:hover { transform: scale(1.02); }
+
+
+.transaccion-ingreso { border-left-color: var(--verde-exito) !important; }
+.transaccion-gasto { border-left-color: var(--rojo-error) !important; }
+
+.monto { font-weight: bold; font-size: 1.1rem; }
+.monto.ingreso { color: var(--verde-exito); }
+.monto.gasto { color: var(--rojo-error); }
+
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ced4da;
+  border-radius: 8px; 
+  background-color: var(--gris-claro);
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--azul-primario);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+button:hover { background-color: var(--azul-hover); transform: translateY(-1px); }
+
+.btn-borrar {
+  background-color: transparent;
+  color: #bbb;
+  width: auto;
+  padding: 5px;
+}
+.btn-borrar:hover { color: var(--rojo-error); background: none; }
+
+#vite-plugin-checker-error-overlay { display: none !important; }
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+
+#auth-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+#auth-buttons button, #btn-logout {
+  width: auto !important; 
+  padding: 8px 20px !important;
+  font-size: 0.9rem;
+  border-radius: 30px !important;
+  background: white !important;
+  color: var(--azul-primario) !important;
+  border: 2px solid var(--azul-primario) !important;
+}
+
+#auth-buttons button:hover {
+  background: var(--azul-primario) !important;
+  color: white !important;
+}
+
+#btn-logout {
+  color: var(--rojo-error) !important;
+  border-color: var(--rojo-error) !important;
+}
+
+#btn-logout:hover {
+  background: var(--rojo-error) !important;
+  color: white !important;
 }
