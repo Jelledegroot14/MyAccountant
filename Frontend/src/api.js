@@ -23,5 +23,16 @@ export const api = {
             headers: { 'Authorization': `Bearer ${token}` }
         });
         return res;
+    },
+    guardarTransaccion: async (transaccion, token) => {
+        const response = await fetch('TU_URL_API/transacciones', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify(transaccion)
+        });
+        return response.json();
     }
 };
