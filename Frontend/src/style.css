@@ -50,18 +50,20 @@ body {
 }
 
 #lista-transacciones li {
-  background: var(--gris-claro);
-  margin-bottom: 10px;
-  padding: 15px;
-  border-radius: 10px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-left: 5px solid #ccc; 
-  transition: transform 0.2s;
+  justify-content: space-between; 
+  align-items: center;          
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+  background: #fff;
+  margin-bottom: 5px;
+  border-radius: 8px;
 }
 
-#lista-transacciones li:hover { transform: scale(1.02); }
+#lista-transacciones li span {
+  flex-grow: 1; 
+  margin-right: 15px;
+}
 
 
 .transaccion-ingreso { border-left-color: var(--verde-exito) !important; }
@@ -141,4 +143,18 @@ nav {
 #btn-logout:hover {
   background: var(--rojo-error) !important;
   color: white !important;
+}
+.btn-eliminar {
+  background: transparent !important;
+  border: none !important;
+  color: #ff4d4d;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  flex-shrink: 0; 
+  padding: 0 5px;
+}
+.btn-eliminar:hover {
+  color: #cc0000;
+  transform: scale(1.2); 
 }
