@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/style.css">
     <title>MyAccountant</title>
 </head>
@@ -11,7 +12,8 @@
         <header class="main-header">
             <h1>MyAccountant</h1>
             <div class="user-controls">
-                <div id="auth-buttons"></div> <button id="btn-logout" style="display: none;">Cerrar Sesión</button>
+                <div id="auth-buttons"></div> 
+                <button id="btn-logout" style="display: none;">Cerrar Sesión</button>
             </div>
         </header>
 
@@ -24,71 +26,75 @@
             </form>
         </div>
 
-        <div id="seccion-registro" style="display: none;"></div> 
-
         <div id="seccion-movimientos" class="dashboard-grid" style="display: none;">
-          <div class="col-left">
-              <div class="card">
-                  <h3>Balance Total</h3>
-                  <h1 id="saldo-total">0.00€</h1>
-                  <div class="balance-details">
-                      <p>Ingresos: <span id="total-ingresos" style="color: green;">0.00€</span></p>
-                      <p>Gastos: <span id="total-gastos" style="color: red;">0.00€</span></p>
-                  </div>
-              </div>
-              <button id="btn-open-modal" class="btn-main">+ Añadir Transacción</button>
-          </div>
-      
-          <div class="col-right">
-              <div class="card">
-                  <h3>Gastos por Categoría</h3>
-                  <div id="chart-container" style="height: 200px; display: flex; align-items: center; justify-content: center; background: #fdfdfd; border: 1px dashed #ccc;">
-                      [Espacio para Gráfico]
-                  </div>
-              </div>
-              <div class="card" style="margin-top: 20px;">
-                  <h3>Historial</h3>
-                  <ul id="lista-transacciones"></ul>
-              </div>
-          </div>
-      </div>
+            <div class="col-left">
+                <div class="card">
+                    <h3>Balance Total</h3>
+                    <h1 id="saldo-total">0.00€</h1>
+                    <div class="balance-details">
+                        <p>Ingresos: <span id="total-ingresos" style="color: green;">0.00€</span></p>
+                        <p>Gastos: <span id="total-gastos" style="color: red;">0.00€</span></p>
+                    </div>
+                </div>
+                <button id="btn-open-modal" class="btn-main">+ Añadir Transacción</button>
+                <button id="btn-open-historial" class="btn-main">Ver Historial Completo</button>
+            </div>
+        
+            <div class="col-right">
+                <div class="card">
+                    <h3>Gastos por Categoría</h3>
+                    <div id="chart-container" style="height: 200px; display: flex; align-items: center; justify-content: center; background: #fdfdfd; border: 1px dashed #ccc;">
+                        [Espacio para Gráfico]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    </div> <div id="modal-transaccion" class="modal">
-      <div class="modal-content card">
-          <span class="close-modal">&times;</span>
-          
-          <h2>Nueva Transacción</h2>
-          <p class="subtitle">Introduce los detalles del nuevo ingreso o gasto.</p>
+    <div id="modal-transaccion" class="modal">
+        <div class="modal-content card">
+            <span class="close-modal">&times;</span>
+            <h2>Nueva Transacción</h2>
+            <form id="transaccionForm">
+                <div class="form-group">
+                    <label for="monto">Cantidad (€)</label>
+                    <input type="number" id="monto" placeholder="0.00" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="concepto">Concepto</label>
+                    <input type="text" id="concepto" placeholder="Ej: Supermercado" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria">
+                        <option value="Vivienda">Vivienda</option>
+                        <option value="Comida">Comida</option>
+                        <option value="Ocio">Ocio</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipo">Tipo de movimiento</label>
+                    <select id="tipo">
+                        <option value="gasto">Gasto</option>
+                        <option value="ingreso">Ingreso</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-main">Guardar Registro</button>
+            </form>
+        </div>
+    </div>
 
-          <form id="transaccionForm">
-              <div class="form-group">
-                  <label for="monto">Cantidad (€)</label>
-                  <input type="number" id="monto" placeholder="0.00" step="0.01" required>
-              </div>
+    <div id="modal-historial" class="modal">
+        <div class="modal-content" style="width: 600px;">
+            <span id="close-historial" class="close-modal">&times;</span>
+            <h2>Historial de Transacciones</h2>
+            <ul id="lista-transacciones" class="lista-historial">
+                </ul>
+        </div>
+    </div>
 
-              <div class="form-group">
-                  <label for="concepto">Concepto</label>
-                  <input type="text" id="concepto" placeholder="Ej: Supermercado" required>
-              </div>
-
-              <div class="form-group">
-                  <label for="categoria">Categoría</label>
-                  <select id="categoria">
-                      <option value="Vivienda">Vivienda</option>
-                      <option value="Comida">Comida</option>
-                      <option value="Ocio">Ocio</option>
-                      <option value="Otros">Otros</option>
-                  </select>
-              </div>
-
-              <input type="hidden" id="tipo" value="gasto">
-
-              <button type="submit" class="btn-main">Guardar Registro</button>
-          </form>
-      </div>
-  </div>
-
-  <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/main.js"></script>
 
 </body>
 </html>

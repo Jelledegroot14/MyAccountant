@@ -1,31 +1,19 @@
 const API_URL = 'http://localhost:3000';
 
 export const api = {
-    login: async (email, password) => {
-        const res = await fetch(`${API_URL}/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-        return await res.json();
-    },
-
     getTransacciones: async (usuarioId, token) => {
-        const res = await fetch(`${API_URL}/transacciones/${usuarioId}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+        const timestamp = new Date().getTime();
+        const res = await fetch(`${API_URL}/transacciones/${usuarioId}?t=${timestamp}`, {
+            headers: { 
+                'Authorization': `Bearer ${token}`,
+                'Cache-Control': 'no-cache, no-store, must-revalidate'
+            }
         });
         return await res.json();
     },
 
-    eliminarTransaccion: async (id, token) => {
-        const res = await fetch(`${API_URL}/transacciones/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        return res;
-    },
     guardarTransaccion: async (transaccion, token) => {
-        const response = await fetch('TU_URL_API/transacciones', {
+        const response = await fetch(`${API_URL}/transacciones`, {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
@@ -33,6 +21,14 @@ export const api = {
             },
             body: JSON.stringify(transaccion)
         });
-        return response.json();
+        if (!response.ok) throw new Error('Error al guardar');
+        return await response.json();
+    },
+
+    eliminarTransaccion: async (id, token) => {
+        await fetch(`${API_URL}/transacciones/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
     }
 };

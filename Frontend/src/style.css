@@ -102,3 +102,13 @@ h3 { margin-top: 0; color: #333; }
   border-radius: 8px;
   box-sizing: border-box; 
 }
+/* Estilo para la lista */
+.lista-historial { list-style: none; padding: 0; max-height: 400px; overflow-y: auto; }
+.lista-historial li { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+
+/* Colores para gastos e ingresos */
+.text-gasto { color: #dc2626; font-weight: bold; } /* Rojo */
+.text-ingreso { color: #16a34a; font-weight: bold; } /* Verde */
+
+.btn-eliminar { background: none; border: none; color: #aaa; cursor: pointer; }
+.btn-eliminar:hover { color: red; }
