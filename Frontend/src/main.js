@@ -1,6 +1,7 @@
 import { api } from './api.js';
 import { auth } from './auth.js';
 import { inicializarGrafico } from './chart-logic.js';
+
 const cargarTransacciones = async () => {
     try {
         const datos = await api.getTransacciones(auth.getUsuarioId(), auth.getToken());
@@ -29,10 +30,14 @@ const cargarTransacciones = async () => {
         });
 
         const saldoFinal = totalIngresos - totalGastos;
-        document.getElementById('saldo-total').innerText = `${saldoFinal.toFixed(2)}€`;
+        const elementoSaldo = document.getElementById('saldo-total');
+
+        elementoSaldo.innerText = `${saldoFinal.toFixed(2)}€`;
+        elementoSaldo.style.color = saldoFinal >= 0 ? '#2ecc71' : '#e74c3c';
         document.getElementById('total-ingresos').innerText = `${totalIngresos.toFixed(2)}€`;
         document.getElementById('total-gastos').innerText = `${totalGastos.toFixed(2)}€`;
-        inicializarGrafico(datos, saldoFinal);
+        
+        inicializarGrafico(datos);
 
     } catch (err) { 
         console.error("Error al cargar:", err); 

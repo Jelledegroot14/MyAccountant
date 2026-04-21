@@ -12,10 +12,11 @@ const ICONOS_CATEGORIAS = {
     Otros: 'fa-solid fa-ellipsis'
 };
 
-let miGrafico = null; 
+let miGrafico = null;
 
 export const inicializarGrafico = (datosTransacciones) => {
     const ctx = document.getElementById('chartGastos');
+    const overlay = document.getElementById('center-text-overlay'); 
     if (!ctx) return;
 
     const gastosPorCategoria = datosTransacciones
@@ -29,13 +30,15 @@ export const inicializarGrafico = (datosTransacciones) => {
             return acumulador;
         }, {});
 
+    const totalGastos = Object.values(gastosPorCategoria).reduce((a, b) => a + b, 0);    
+    if (overlay) {
+        overlay.innerText = `${totalGastos.toFixed(2)}€`;
+    }
     const labels = Object.keys(gastosPorCategoria);
     const dataValues = Object.values(gastosPorCategoria);
     const backgroundColors = labels.map(label => COLORES_CATEGORIAS[label] || '#ccc');
 
-    if (miGrafico) {
-        miGrafico.destroy();
-    }
+    if (miGrafico) miGrafico.destroy();
 
     miGrafico = new Chart(ctx, {
         type: 'doughnut',
@@ -63,17 +66,13 @@ export const inicializarGrafico = (datosTransacciones) => {
         }
     });
 
-
     crearLeyendaPersonalizada(gastosPorCategoria);
 };
-
 const crearLeyendaPersonalizada = (gastosPorCategoria) => {
     const container = document.querySelector('.chart-card');
     if (!container) return;
 
-
     let leyendaHTML = '<div class="custom-legend">';
-
     Object.entries(gastosPorCategoria).forEach(([cat, monto]) => {
         const color = COLORES_CATEGORIAS[cat] || '#ccc';
         const iconoClase = ICONOS_CATEGORIAS[cat] || 'fa-solid fa-question';
