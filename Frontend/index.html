@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>MyAccountant</title>
 </head>
 <body>
@@ -41,13 +42,13 @@
             </div>
         
             <div class="col-right">
-                <div class="card">
-                    <h3>Gastos por Categoría</h3>
-                    <div id="chart-container" style="height: 200px; display: flex; align-items: center; justify-content: center; background: #fdfdfd; border: 1px dashed #ccc;">
-                        [Espacio para Gráfico]
-                    </div>
-                </div>
-            </div>
+              <div class="card chart-card">
+                  <h3>Gastos por Categoría</h3>
+                  <div class="chart-wrapper">
+                      <canvas id="chartGastos"></canvas>
+                  </div>
+              </div>
+          </div>
         </div>
     </div>
 
@@ -93,7 +94,7 @@
                 </ul>
         </div>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="/src/main.js"></script>
 
 </body>

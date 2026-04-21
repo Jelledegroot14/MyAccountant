@@ -102,13 +102,42 @@ h3 { margin-top: 0; color: #333; }
   border-radius: 8px;
   box-sizing: border-box; 
 }
-/* Estilo para la lista */
+
 .lista-historial { list-style: none; padding: 0; max-height: 400px; overflow-y: auto; }
 .lista-historial li { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
 
-/* Colores para gastos e ingresos */
-.text-gasto { color: #dc2626; font-weight: bold; } /* Rojo */
-.text-ingreso { color: #16a34a; font-weight: bold; } /* Verde */
+
+.text-gasto { color: #dc2626; font-weight: bold; } 
+.text-ingreso { color: #16a34a; font-weight: bold; } 
 
 .btn-eliminar { background: none; border: none; color: #aaa; cursor: pointer; }
 .btn-eliminar:hover { color: red; }
+
+.legend-icon {
+  width: 25px; 
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.legend-label {
+  flex-grow: 1;
+  font-weight: 500;
+}
+
+.legend-value {
+  font-weight: bold;
+  color: #333;
+  text-align: right;
+  margin-left: 10px;
+}

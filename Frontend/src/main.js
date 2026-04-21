@@ -1,6 +1,6 @@
 import { api } from './api.js';
 import { auth } from './auth.js';
-
+import { inicializarGrafico } from './chart-logic.js';
 const cargarTransacciones = async () => {
     try {
         const datos = await api.getTransacciones(auth.getUsuarioId(), auth.getToken());
@@ -28,10 +28,15 @@ const cargarTransacciones = async () => {
             lista.appendChild(li);
         });
 
-        document.getElementById('saldo-total').innerText = `${(totalIngresos - totalGastos).toFixed(2)}€`;
+        const saldoFinal = totalIngresos - totalGastos;
+        document.getElementById('saldo-total').innerText = `${saldoFinal.toFixed(2)}€`;
         document.getElementById('total-ingresos').innerText = `${totalIngresos.toFixed(2)}€`;
         document.getElementById('total-gastos').innerText = `${totalGastos.toFixed(2)}€`;
-    } catch (err) { console.error("Error al cargar:", err); }
+        inicializarGrafico(datos, saldoFinal);
+
+    } catch (err) { 
+        console.error("Error al cargar:", err); 
+    }
 };
 
 const gestionarUI = () => {
