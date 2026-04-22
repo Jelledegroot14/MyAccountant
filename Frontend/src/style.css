@@ -151,3 +151,26 @@ h3 { margin-top: 0; color: #333; }
   color: #333;
   pointer-events: none; 
 }
+
+.main-header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 20px;
+}
+
+#btn-logout {
+  background-color: #dc2626; 
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+#btn-logout:hover {
+  background-color: #b91c1c; 
+}

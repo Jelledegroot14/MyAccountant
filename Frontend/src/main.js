@@ -3,8 +3,22 @@ import { auth } from './auth.js';
 import { inicializarGrafico } from './chart-logic.js';
 
 const cargarTransacciones = async () => {
+    const userId = auth.getUsuarioId();
+    const token = auth.getToken();
+
+    if (!userId || userId === 'undefined' || !token) {
+        console.warn("No hay usuario o token disponible. Esperando login...");
+        return;
+    }
+
     try {
-        const datos = await api.getTransacciones(auth.getUsuarioId(), auth.getToken());
+        const datos = await api.getTransacciones(userId, token);
+        
+        if (!Array.isArray(datos)) {
+            console.error("El servidor no devolvió una lista de transacciones:", datos);
+            return;
+        }
+
         const lista = document.getElementById('lista-transacciones');
         if (!lista) return;
 
@@ -28,19 +42,21 @@ const cargarTransacciones = async () => {
             `;
             lista.appendChild(li);
         });
-
         const saldoFinal = totalIngresos - totalGastos;
         const elementoSaldo = document.getElementById('saldo-total');
 
-        elementoSaldo.innerText = `${saldoFinal.toFixed(2)}€`;
-        elementoSaldo.style.color = saldoFinal >= 0 ? '#2ecc71' : '#e74c3c';
+        if (elementoSaldo) {
+            elementoSaldo.innerText = `${saldoFinal.toFixed(2)}€`;
+            elementoSaldo.style.color = saldoFinal >= 0 ? '#2ecc71' : '#e74c3c';
+        }
+        
         document.getElementById('total-ingresos').innerText = `${totalIngresos.toFixed(2)}€`;
         document.getElementById('total-gastos').innerText = `${totalGastos.toFixed(2)}€`;
         
         inicializarGrafico(datos);
 
     } catch (err) { 
-        console.error("Error al cargar:", err); 
+        console.error("Error al cargar transacciones:", err); 
     }
 };
 
@@ -76,6 +92,41 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     document.getElementById('btn-open-historial')?.addEventListener('click', () => modalHist?.classList.add('active'));
 
+    document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+    
+        try {
+            console.log("--- Iniciando petición de login ---");
+            const data = await api.login(email, password);
+            
+            console.log("RESPUESTA COMPLETA DEL SERVIDOR:", data); 
+    
+            if (!data || typeof data !== 'object') {
+                console.error("El servidor devolvió algo que no es un objeto:", data);
+                alert("Error: El formato de respuesta del servidor no es válido.");
+                return;
+            }
+
+            const token = data.token || data.access_token || data.jwt || data.accessToken;
+            
+            const userId = data.usuarioId || data.userId || data.id || data.user_id || data._id || (data.user ? data.user.id : null);
+            
+            if (token && userId) {
+                auth.saveSession(token, userId);
+                gestionarUI();
+            } else {
+                console.error("FALLO EN ESTRUCTURA: Los campos esperados no existen en:", data);
+                alert("El servidor respondió, pero no encontramos 'token' o 'ID'. Mira la consola (pestaña Console) para ver qué campos llegaron.");
+            }
+        } catch (err) {
+            console.error("ERROR CAPTURADO EN LOGIN:", err);
+            alert("Error en el login: " + err.message);
+        }
+    });
+
     document.getElementById('transaccionForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const nuevaTrans = {
@@ -105,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-logout')?.addEventListener('click', () => {
-        auth.logout();
+        auth.clearSession(); 
         window.location.reload();
     });
 });
