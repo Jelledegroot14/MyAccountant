@@ -72,17 +72,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modalTrans = document.getElementById('modal-transaccion');
     const modalHist = document.getElementById('modal-historial');
+    const modalTitulo = document.getElementById('modal-titulo'); 
 
-    const cerrarModales = () => {
+    const cerrarModalTransaccion = () => {
         transaccionEditandoId = null;
         document.getElementById('transaccionForm').reset();
         modalTrans?.classList.remove('active');
+    };
+
+    const cerrarModalHistorial = () => {
         modalHist?.classList.remove('active');
     };
 
-    document.getElementById('btn-open-modal')?.addEventListener('click', () => modalTrans?.classList.add('active'));
-    document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', cerrarModales));
+    document.getElementById('btn-open-modal')?.addEventListener('click', () => {
+        transaccionEditandoId = null;
+        if(modalTitulo) modalTitulo.innerText = "Nueva Transacción";
+        modalTrans?.classList.add('active');
+    });
+
     document.getElementById('btn-open-historial')?.addEventListener('click', () => modalHist?.classList.add('active'));
+    document.getElementById('close-transaccion')?.addEventListener('click', cerrarModalTransaccion);
+    document.getElementById('close-historial')?.addEventListener('click', cerrarModalHistorial);
+
     document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
@@ -114,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 await api.guardarTransaccion(transData, auth.getToken());
             }
-            cerrarModales();
+            cerrarModalTransaccion();
             await cargarTransacciones(); 
         } catch (err) { alert("Error: " + err.message); }
     });
@@ -131,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (e.target.classList.contains('btn-editar')) {
             transaccionEditandoId = id;
+            if(modalTitulo) modalTitulo.innerText = "Editar Transacción";
             document.getElementById('concepto').value = e.target.getAttribute('data-concepto');
             document.getElementById('monto').value = e.target.getAttribute('data-monto');
             document.getElementById('tipo').value = e.target.getAttribute('data-tipo');
