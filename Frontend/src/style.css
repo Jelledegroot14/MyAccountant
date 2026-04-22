@@ -1,7 +1,19 @@
-body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; margin: 0; }
-#app { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+body {  
+  font-family: 'Segoe UI',  Tahoma, sans-serif; 
+  background: #f4f7f6; 
+  margin: 0; 
+}
+#app { 
+  max-width: 1100px; 
+  margin: 0 auto; 
+  padding: 40px 20px; 
+}
 
-.dashboard-grid { display: grid; grid-template-columns: 350px 1fr; gap: 30px; }
+.dashboard-grid { 
+  display: grid; 
+  grid-template-columns: 350px 1fr; 
+  gap: 30px; 
+}
 
 .card { 
     background: white; 
@@ -22,8 +34,15 @@ body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f4f7f6; margin:
     margin-top: 20px;
 }
 
-h3 { margin-top: 0; color: #333; }
-.balance-details { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+h3 { 
+  margin-top: 0; 
+  color: #333; 
+}
+.balance-details { 
+  margin-top: 20px; 
+  border-top: 1px solid #eee; 
+  padding-top: 15px; 
+}
 .modal {
   display: none;
   position: fixed;
@@ -103,15 +122,40 @@ h3 { margin-top: 0; color: #333; }
   box-sizing: border-box; 
 }
 
-.lista-historial { list-style: none; padding: 0; max-height: 400px; overflow-y: auto; }
-.lista-historial li { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+.lista-historial { 
+  list-style: none; 
+  padding: 0; 
+  max-height: 400px; 
+  overflow-y: auto; 
+}
+.lista-historial li {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+  display: grid;
+  grid-template-columns: 1fr 120px 60px; 
+  align-items: center;
+  gap: 10px;
+}
 
 
-.text-gasto { color: #dc2626; font-weight: bold; } 
-.text-ingreso { color: #16a34a; font-weight: bold; } 
+.text-gasto { 
+  color: #dc2626; 
+  font-weight: bold; 
+} 
+.text-ingreso { 
+  color: #16a34a; 
+  font-weight: bold; 
+} 
 
-.btn-eliminar { background: none; border: none; color: #aaa; cursor: pointer; }
-.btn-eliminar:hover { color: red; }
+.btn-eliminar { 
+  background: none; 
+  border: none; 
+  color: #aaa; 
+  cursor: pointer; 
+}
+.btn-eliminar:hover { 
+  color: red; 
+}
 
 .legend-icon {
   width: 25px; 
@@ -173,4 +217,21 @@ h3 { margin-top: 0; color: #333; }
 
 #btn-logout:hover {
   background-color: #b91c1c; 
+}
+.btn-editar { background: none; 
+  border: none; 
+  color: #3b82f6; 
+  cursor: pointer; 
+  margin-right: 10px; 
+  font-size: 16px; 
+}
+.btn-editar:hover {
+   color: #1e3a8a; 
+}
+#modal-transaccion {
+  z-index: 2000; 
+}
+
+#modal-historial {
+  z-index: 1000;
 }

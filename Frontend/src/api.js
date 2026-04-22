@@ -31,6 +31,23 @@ export const api = {
             headers: { 'Authorization': `Bearer ${token}` }
         });
     },
+    actualizarTransaccion: async (id, transaccion, token) => {
+        const response = await fetch(`${API_URL}/transacciones/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify(transaccion)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: 'Error desconocido' }));
+            console.error("Detalle del error del servidor:", errorData);
+            throw new Error(errorData.message || 'Error al actualizar');
+        }
+        return await response.json();
+    },
     login: async (email, password) => {
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',

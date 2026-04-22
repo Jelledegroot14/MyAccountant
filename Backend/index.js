@@ -127,5 +127,28 @@ app.delete('/transacciones/:id', verificarToken, async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
+app.put('/transacciones/:id', verificarToken, async (req, res) => {
+    const { id } = req.params;
+    const { concepto, monto, tipo, categoria } = req.body;
+
+    try {
+        const query = `
+            UPDATE transacciones 
+            SET concepto = $1, monto = $2, tipo = $3, categoria = $4 
+            WHERE id = $5
+        `;
+        
+        const result = await pool.query(query, [concepto, monto, tipo, categoria, id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "No se encontró la transacción para actualizar" });
+        }
+
+        res.json({ message: "Transacción actualizada con éxito" });
+    } catch (err) {
+        console.error("Error al actualizar en BD:", err);
+        res.status(500).json({ error: "Error interno del servidor al actualizar" });
+    }
+});
 
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));
