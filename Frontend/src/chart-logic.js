@@ -1,7 +1,7 @@
 const COLORES_CATEGORIAS = {
     Vivienda: '#4361ee',
     Comida: '#4cc9f0',
-    Ocio: '#f72585',
+    Ocio: '#ff8000',
     Otros: '#4895ef'
 };
 

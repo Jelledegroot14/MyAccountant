@@ -42,7 +42,16 @@ const cargarTransacciones = async () => {
         });
 
         const saldoFinal = totalIngresos - totalGastos;
-        document.getElementById('saldo-total').innerText = `${saldoFinal.toFixed(2)}€`;
+        const saldoElement = document.getElementById('saldo-total');
+        saldoElement.innerText = `${saldoFinal.toFixed(2)}€`;
+        if (saldoFinal >= 0) {
+            saldoElement.classList.add('balance-positivo');
+            saldoElement.classList.remove('balance-negativo');
+        } else {
+            saldoElement.classList.add('balance-negativo');
+            saldoElement.classList.remove('balance-positivo');
+        }
+        
         document.getElementById('total-ingresos').innerText = `${totalIngresos.toFixed(2)}€`;
         document.getElementById('total-gastos').innerText = `${totalGastos.toFixed(2)}€`;
         

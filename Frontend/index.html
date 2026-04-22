@@ -10,8 +10,7 @@
 <body>
 
     <div id="app">
-        <header class="main-header">
-            <h1>MyAccountant</h1>
+        <header class="main-header" style="justify-content: flex-end;">
             <div class="user-controls">
                 <div id="auth-buttons"></div> 
                 <button id="btn-logout" style="display: none;">Cerrar Sesión</button>
@@ -27,36 +26,43 @@
             </form>
         </div>
 
-        <div id="seccion-movimientos" class="dashboard-grid" style="display: none;">
+        <div id="seccion-movimientos" class="dashboard-grid">
+            
             <div class="col-left">
+                <div class="logo-wrapper">
+                    <img src="src/assets/Logo tfg-Photoroom.png" alt="Logo" class="logo-big">
+                </div>
+
                 <div class="card">
                     <h3>Balance Total</h3>
                     <h1 id="saldo-total">0.00€</h1>
                     <div class="balance-details">
-                        <p>Ingresos: <span id="total-ingresos" style="color: green;">0.00€</span></p>
-                        <p>Gastos: <span id="total-gastos" style="color: red;">0.00€</span></p>
+                        <p>Ingresos: <span id="total-ingresos" style="color: #16a34a;">0.00€</span></p>
+                        <p>Gastos: <span id="total-gastos" style="color: #dc2626;">0.00€</span></p>
                     </div>
                 </div>
+                
                 <button id="btn-open-modal" class="btn-main">+ Añadir Transacción</button>
-                <button id="btn-open-historial" class="btn-main">Ver Historial Completo</button>
+                <button id="btn-open-historial" class="btn-secondary">Ver Historial Completo</button>
             </div>
         
             <div class="col-right">
-              <div class="card chart-card">
-                  <h3>Gastos por Categoría</h3>
-                  <div class="chart-wrapper" style="position: relative;">
-                    <canvas id="chartGastos"></canvas>
-                    <div id="center-text-overlay"></div>
+                <div class="card chart-card">
+                    <h3>Gastos por Categoría</h3>
+                    <div class="chart-wrapper" style="position: relative;">
+                        <canvas id="chartGastos"></canvas>
+                        <div id="center-text-overlay"></div>
+                    </div>
                 </div>
-              </div>
-          </div>
+            </div>
         </div>
     </div>
 
     <div id="modal-transaccion" class="modal">
-      <div class="modal-content">
-        <span class="close-modal" id="close-transaccion">&times;</span>
-        <h2 id="modal-titulo">Nueva Transacción</h2> <form id="transaccionForm">
+        <div class="modal-content">
+            <span class="close-modal" id="close-transaccion">&times;</span>
+            <h2 id="modal-titulo">Nueva Transacción</h2> 
+            <form id="transaccionForm">
                 <div class="form-group">
                     <label for="monto">Cantidad (€)</label>
                     <input type="number" id="monto" placeholder="0.00" step="0.01" required>
@@ -90,10 +96,10 @@
         <div class="modal-content" style="width: 600px;">
             <span id="close-historial" class="close-modal">&times;</span>
             <h2>Historial de Transacciones</h2>
-            <ul id="lista-transacciones" class="lista-historial">
-                </ul>
+            <ul id="lista-transacciones" class="lista-historial"></ul>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="/src/main.js"></script>
 
