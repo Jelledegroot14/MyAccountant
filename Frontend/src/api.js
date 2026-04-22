@@ -57,5 +57,14 @@ export const api = {
         
         if (!response.ok) throw new Error('Email o contraseña incorrectos');
         return await response.json(); 
+    },
+    register: async (nombre, email, password) => {
+        const res = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nombre, email, password })
+        });
+        if (!res.ok) throw new Error("Error en el registro");
+        return await res.json();
     }
 };

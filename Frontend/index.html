@@ -17,14 +17,28 @@
             </div>
         </header>
 
-        <div id="seccion-login" class="container">
-            <h2>Iniciar Sesión</h2>
-            <form id="loginForm">
-                <input type="email" id="login-email" placeholder="Email" required>
-                <input type="password" id="login-password" placeholder="Contraseña" required>
-                <button type="submit">Entrar</button>
+        <div id="auth-screen">
+          <div id="login-form-box" class="auth-card">
+              <h2>Iniciar Sesión</h2>
+              <form id="loginForm">
+                  <input type="email" id="login-email" placeholder="Email" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+                  <input type="password" id="login-password" placeholder="Contraseña" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+                  <button type="submit" class="btn-main">Entrar</button>
+              </form>
+              <p class="auth-link">¿No tienes cuenta? <span onclick="mostrarRegistro()">Regístrate</span></p>
+          </div>
+      
+          <div id="register-form-box" class="auth-card" style="display: none;">
+            <h2>Crear Cuenta</h2>
+            <form id="registerForm">
+                <input type="text" id="reg-nombre" placeholder="Nombre" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+                <input type="email" id="reg-email" placeholder="Email" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+                <input type="password" id="reg-password" placeholder="Contraseña" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
+                <button type="submit" class="btn-main">Registrarse</button>
             </form>
+            <p class="auth-link">¿Ya tienes cuenta? <span onclick="mostrarLogin()">Inicia sesión</span></p>
         </div>
+      </div>
 
         <div id="seccion-movimientos" class="dashboard-grid">
             

@@ -60,21 +60,31 @@ const cargarTransacciones = async () => {
 };
 
 const gestionarUI = () => {
-    const seccionLogin = document.getElementById('seccion-login');
+    const seccionAuth = document.getElementById('auth-screen');
     const seccionMovimientos = document.getElementById('seccion-movimientos');
     const btnLogout = document.getElementById('btn-logout');
 
     if (auth.isLogged()) {
-        seccionLogin.style.display = 'none';
-        seccionMovimientos.style.display = 'grid';
+        seccionAuth.style.display = 'none';
+        seccionMovimientos.style.display = 'grid'; 
         if(btnLogout) btnLogout.style.display = 'block';
         cargarTransacciones();
     } else {
-        seccionLogin.style.display = 'block';
+        seccionAuth.style.display = 'flex'; 
         seccionMovimientos.style.display = 'none';
         if(btnLogout) btnLogout.style.display = 'none';
     }
 };
+
+    window.mostrarRegistro = () => {
+        document.getElementById('login-form-box').style.display = 'none';
+        document.getElementById('register-form-box').style.display = 'block';
+    };
+
+    window.mostrarLogin = () => {
+        document.getElementById('login-form-box').style.display = 'block';
+        document.getElementById('register-form-box').style.display = 'none';
+    };
 
 document.addEventListener('DOMContentLoaded', () => {
     gestionarUI();
@@ -163,5 +173,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-logout')?.addEventListener('click', () => {
         auth.clearSession(); 
         window.location.reload();
+    });
+    document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const nombre = document.getElementById('reg-nombre').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+
+        try {
+            await api.register(nombre, email, password);
+            
+            alert("¡Registro exitoso! Ya puedes iniciar sesión.");
+            document.getElementById('registerForm').reset(); 
+            mostrarLogin(); 
+        } catch (err) { 
+            alert("Error al registrar: " + err.message); 
+        }
     });
 });
