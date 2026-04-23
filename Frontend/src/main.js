@@ -95,6 +95,7 @@ const gestionarUI = () => {
         seccionAuth.style.display = 'none';
         seccionMovimientos.style.display = 'grid'; 
         if(btnLogout) btnLogout.style.display = 'block';
+        actualizarInfoUsuario();
         if(btnAdminView) btnAdminView.style.display = auth.isAdmin() ? 'block' : 'none';
         cargarTransacciones();
     } else {
@@ -102,6 +103,20 @@ const gestionarUI = () => {
         seccionMovimientos.style.display = 'none';
         if(btnLogout) btnLogout.style.display = 'none';
         if(btnAdminView) btnAdminView.style.display = 'none';
+    }
+};
+const actualizarInfoUsuario = () => {
+    const userNameElement = document.getElementById('user-name');
+    const userRoleElement = document.getElementById('user-role');
+    
+    const nombre = localStorage.getItem('nombre') || 'Usuario';
+    const rol = localStorage.getItem('rol') || 'user';
+
+    if (userNameElement && userRoleElement) {
+        userNameElement.textContent = nombre;
+        userRoleElement.textContent = rol.toUpperCase();
+        
+        userRoleElement.style.backgroundColor = (rol === 'admin') ? '#9333ea' : '#64748b';
     }
 };
 
@@ -176,15 +191,27 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
+        
+
         try {
             const data = await api.login(email, password);
-            const token = data.token || data.access_token;
-            const userId = data.usuarioId || data.userId || (data.user ? data.user.id : null);
-            if (token && userId) {
-                auth.saveSession(data.token, data.user.id, data.user.rol);
-                gestionarUI();
+            
+            if (data && data.user) {
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('nombre', data.user.nombre); 
+                localStorage.setItem('rol', data.user.rol);     
+                localStorage.setItem('usuarioId', data.user.id); 
+
+                console.log("Sesión guardada:", { 
+                    nombre: localStorage.getItem('nombre'), 
+                    rol: localStorage.getItem('rol') 
+                });
+
+                gestionarUI(); 
             }
-        } catch (err) { alert("Error: " + err.message); }
+        } catch (err) { 
+            alert("Error al iniciar sesión: " + err.message); 
+        }
     });
 
     document.getElementById('transaccionForm')?.addEventListener('submit', async (e) => {
@@ -206,6 +233,22 @@ document.addEventListener('DOMContentLoaded', () => {
             cerrarModalTransaccion();
             await cargarTransacciones(); 
         } catch (err) { alert("Error: " + err.message); }
+    });
+    document.getElementById('lista-usuarios')?.addEventListener('change', async (e) => {
+        if (e.target.classList.contains('rol-select')) {
+            const id = e.target.getAttribute('data-id');
+            const nuevoRol = e.target.value;
+            
+            try {
+
+                await api.actualizarRol(id, nuevoRol, auth.getToken());
+                
+                alert("Rol actualizado correctamente.");
+            } catch (err) {
+                alert("Error al actualizar el rol: " + err.message);
+                cargarUsuarios(); 
+            }
+        }
     });
 
     document.getElementById('lista-transacciones')?.addEventListener('click', async (e) => {

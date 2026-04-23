@@ -10,17 +10,17 @@
 <body>
 
     <div id="app">
-        <header class="main-header" style="justify-content: flex-end;">
-            <div class="user-controls">
-                <button id="btn-admin-view" style="display: none; background: #9333ea; color: white; border: none; padding: 8px 15px; border-radius: 8px; margin-right: 10px; cursor: pointer;">
-                    Panel Admin
-                </button>
-                
-                <div id="auth-buttons"></div> 
-                <button id="btn-logout" style="display: none;">Cerrar Sesión</button>
-            </div>
-        </header>
-
+        <header class="main-header">
+          <div id="user-info-display" class="user-info">
+              <span id="user-name" class="user-name"></span>
+              <span id="user-role" class="role-badge"></span>
+          </div>
+      
+          <div class="user-controls">
+              <button id="btn-admin-view" class="btn-header" style="display: none;">Panel Admin</button>
+              <button id="btn-logout" class="btn-header" style="display: none;">Cerrar Sesión</button>
+          </div>
+      </header>
         <div id="auth-screen">
           <div id="login-form-box" class="auth-card">
               <h2>Iniciar Sesión</h2>

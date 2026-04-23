@@ -1,5 +1,5 @@
 const API_URL = 'http://localhost:3000';
-
+const BASE_URL = 'http://localhost:3000';
 export const api = {
     getTransacciones: async (usuarioId, token) => {
         const timestamp = new Date().getTime();
@@ -85,16 +85,20 @@ export const api = {
         return await response.json();
     },
 
-    updateUserRole: async (id, rol, token) => {
-        const response = await fetch(`${API_URL}/usuarios/${id}`, {
-            method: 'PUT',
-            headers: { 
+    actualizarRol: async (id, rol, token) => {
+
+        const response = await fetch(`${BASE_URL}/usuarios/${id}`, {
+            method: 'PUT', 
+            headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` 
+                'Authorization': `Bearer ${token}`
             },
-            body: JSON.stringify({ rol })
+            body: JSON.stringify({ rol }) 
         });
-        if (!response.ok) throw new Error("Error al actualizar rol");
-        return await response.json();
+
+        if (!response.ok) {
+            throw new Error("Error al actualizar el rol");
+        }
+        return response.json();
     }
 };

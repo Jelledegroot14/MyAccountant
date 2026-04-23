@@ -412,3 +412,24 @@ tr:hover {
   align-items: center;
   gap: 15px;
 }
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: auto;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.user-name {
+  font-weight: 600;
+}
+
+.role-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
