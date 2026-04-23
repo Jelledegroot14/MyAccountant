@@ -66,5 +66,35 @@ export const api = {
         });
         if (!res.ok) throw new Error("Error en el registro");
         return await res.json();
+    },
+
+    eliminarUsuario: async (id, token) => {
+        const response = await fetch(`${API_URL}/usuarios/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error("Error al eliminar el usuario");
+        return await response.json();
+    },
+
+    getUsuarios: async (token) => {
+        const response = await fetch(`${API_URL}/usuarios`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (!response.ok) throw new Error("Error al obtener usuarios");
+        return await response.json();
+    },
+
+    updateUserRole: async (id, rol, token) => {
+        const response = await fetch(`${API_URL}/usuarios/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}` 
+            },
+            body: JSON.stringify({ rol })
+        });
+        if (!response.ok) throw new Error("Error al actualizar rol");
+        return await response.json();
     }
 };

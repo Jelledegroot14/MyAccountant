@@ -60,16 +60,20 @@ app.post('/login', async (req, res) => {
       }
 
       const token = jwt.sign(
-          { id: user.id, email: user.email }, 
-          process.env.JWT_SECRET, 
-          { expiresIn: '2h' } 
-      );
+        { id: user.id, email: user.email, rol: user.rol }, 
+        process.env.JWT_SECRET, 
+        { expiresIn: '1h' }
+    );
 
       return res.json({ 
-          message: "¡Bienvenido!", 
-          token, 
-          user: { id: user.id, nombre: user.nombre } 
-      });
+        message: "¡Bienvenido!", 
+        token, 
+        user: { 
+            id: user.id, 
+            nombre: user.nombre,
+            rol: user.rol 
+        } 
+    });
 
   } catch (err) {
       console.error("ERROR CRÍTICO:", err);
@@ -150,5 +154,43 @@ app.put('/transacciones/:id', verificarToken, async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor al actualizar" });
     }
 });
+const esAdmin = (req, res, next) => {
+    if (req.usuario && req.usuario.rol === 'admin') {
+        next();
+    } else {
+        res.status(403).json({ error: "Acceso denegado: Se requiere rol de administrador" });
+    }
+};
 
+app.get('/usuarios', verificarToken, esAdmin, async (req, res) => {
+    try {
+        const result = await pool.query('SELECT id, nombre, email, rol FROM usuarios');
+        res.json(result.rows);
+    } catch (err) { res.status(500).json({ error: "Error al obtener usuarios" }); }
+});
+
+app.put('/usuarios/:id', verificarToken, esAdmin, async (req, res) => {
+    const { rol } = req.body;
+    try {
+        await pool.query('UPDATE usuarios SET rol = $1 WHERE id = $2', [rol, req.params.id]);
+        res.json({ message: "Rol actualizado" });
+    } catch (err) {
+        res.status(500).json({ error: "Error al actualizar" });
+    }
+});
+app.delete('/usuarios/:id', verificarToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query('DELETE FROM usuarios WHERE id = $1', [id]);
+        
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+        
+        res.json({ message: "Usuario eliminado con éxito" });
+    } catch (err) {
+        console.error("Error al eliminar usuario:", err);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));

@@ -12,6 +12,10 @@
     <div id="app">
         <header class="main-header" style="justify-content: flex-end;">
             <div class="user-controls">
+                <button id="btn-admin-view" style="display: none; background: #9333ea; color: white; border: none; padding: 8px 15px; border-radius: 8px; margin-right: 10px; cursor: pointer;">
+                    Panel Admin
+                </button>
+                
                 <div id="auth-buttons"></div> 
                 <button id="btn-logout" style="display: none;">Cerrar Sesión</button>
             </div>
@@ -41,7 +45,6 @@
       </div>
 
         <div id="seccion-movimientos" class="dashboard-grid">
-            
             <div class="col-left">
                 <div class="logo-wrapper">
                     <img src="src/assets/Logo tfg-Photoroom.png" alt="Logo" class="logo-big">
@@ -70,6 +73,32 @@
                 </div>
             </div>
         </div>
+        <section id="seccion-admin" style="display: none;">
+          <div class="admin-card">
+              <div class="admin-header">
+                  <h2>Gestión de Usuarios</h2>
+                  <button id="btn-cerrar-admin" class="btn-volver">
+                      Volver al Dashboard
+                  </button>
+              </div>
+              
+              <div class="table-container">
+                  <table id="tabla-usuarios">
+                      <thead>
+                          <tr>
+                              <th>Nombre</th>
+                              <th>Email</th>
+                              <th>Rol</th>
+                              <th>Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody id="lista-usuarios">
+                          </tbody>
+                  </table>
+              </div>
+          </div>
+      </section>
+      </div>
     </div>
 
     <div id="modal-transaccion" class="modal">

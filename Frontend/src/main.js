@@ -4,6 +4,32 @@ import { inicializarGrafico } from './chart-logic.js';
 
 let transaccionEditandoId = null; 
 
+const cargarUsuarios = async () => {
+    const listaUsuarios = document.getElementById('lista-usuarios');
+    const token = auth.getToken();
+    if (!listaUsuarios) return;
+
+    try {
+        const usuarios = await api.getUsuarios(token);
+        listaUsuarios.innerHTML = ''; 
+        usuarios.forEach(u => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${u.nombre}</td>
+                <td>${u.email}</td>
+                <td>
+                    <select class="rol-select" data-id="${u.id}">
+                        <option value="user" ${u.rol === 'user' ? 'selected' : ''}>User</option>
+                        <option value="admin" ${u.rol === 'admin' ? 'selected' : ''}>Admin</option>
+                    </select>
+                </td>
+                <td><button class="btn-eliminar-usuario" data-id="${u.id}">×</button></td>
+            `;
+            listaUsuarios.appendChild(tr);
+        });
+    } catch (err) { alert("Error al cargar usuarios: " + err.message); }
+};
+
 const cargarTransacciones = async () => {
     const userId = auth.getUsuarioId();
     const token = auth.getToken();
@@ -63,16 +89,19 @@ const gestionarUI = () => {
     const seccionAuth = document.getElementById('auth-screen');
     const seccionMovimientos = document.getElementById('seccion-movimientos');
     const btnLogout = document.getElementById('btn-logout');
+    const btnAdminView = document.getElementById('btn-admin-view');
 
     if (auth.isLogged()) {
         seccionAuth.style.display = 'none';
         seccionMovimientos.style.display = 'grid'; 
         if(btnLogout) btnLogout.style.display = 'block';
+        if(btnAdminView) btnAdminView.style.display = auth.isAdmin() ? 'block' : 'none';
         cargarTransacciones();
     } else {
         seccionAuth.style.display = 'flex'; 
         seccionMovimientos.style.display = 'none';
         if(btnLogout) btnLogout.style.display = 'none';
+        if(btnAdminView) btnAdminView.style.display = 'none';
     }
 };
 
@@ -88,6 +117,36 @@ const gestionarUI = () => {
 
 document.addEventListener('DOMContentLoaded', () => {
     gestionarUI();
+
+    document.getElementById('btn-admin-view')?.addEventListener('click', () => {
+        document.getElementById('seccion-movimientos').style.display = 'none';
+        const seccionAdmin = document.getElementById('seccion-admin');
+        if (seccionAdmin) seccionAdmin.style.display = 'block';
+        cargarUsuarios();
+    });
+
+    document.getElementById('btn-cerrar-admin')?.addEventListener('click', () => {
+        document.getElementById('seccion-admin').style.display = 'none';
+        document.getElementById('seccion-movimientos').style.display = 'grid';
+    });
+
+    document.getElementById('lista-usuarios')?.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-eliminar-usuario')) {
+            const id = e.target.getAttribute('data-id');
+            
+            if (confirm("¿Estás seguro de eliminar este usuario?")) {
+                try {
+                    await api.eliminarUsuario(id, auth.getToken());
+                    
+                    alert("Usuario eliminado correctamente.");
+                    await cargarUsuarios(); 
+                    
+                } catch (err) {
+                    alert("Error al eliminar: " + err.message);
+                }
+            }
+        }
+    });
 
     const modalTrans = document.getElementById('modal-transaccion');
     const modalHist = document.getElementById('modal-historial');
@@ -122,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const token = data.token || data.access_token;
             const userId = data.usuarioId || data.userId || (data.user ? data.user.id : null);
             if (token && userId) {
-                auth.saveSession(token, userId);
+                auth.saveSession(data.token, data.user.id, data.user.rol);
                 gestionarUI();
             }
         } catch (err) { alert("Error: " + err.message); }
