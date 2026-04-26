@@ -4,7 +4,6 @@ const pool = require('./db');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -93,18 +92,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-app.post('/transacciones', verificarToken, async (req, res) => {
-    const { usuario_id, concepto, monto, tipo, categoria } = req.body;
-    try {
-        const query = `
-            INSERT INTO transacciones (usuario_id, concepto, monto, tipo, categoria) 
-            VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-        const result = await pool.query(query, [usuario_id, concepto, monto, tipo, categoria || 'General']);
-        res.status(201).json(result.rows);
-    } catch (err) {
-        res.status(500).json({ error: "No se pudo guardar el movimiento" });
-    }
-});
 
 app.get('/transacciones/:usuario_id', verificarToken, async (req, res) => {
     const { usuario_id } = req.params;
@@ -191,6 +178,37 @@ app.delete('/usuarios/:id', verificarToken, async (req, res) => {
     } catch (err) {
         console.error("Error al eliminar usuario:", err);
         res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: './uploads/', 
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+app.post('/transacciones', verificarToken, upload.single('imagen'), async (req, res) => {
+    try {
+        const { usuario_id, concepto, monto, tipo, categoria } = req.body;
+        
+        const imagenPath = req.file ? `/uploads/${req.file.filename}` : null;
+
+        const query = `
+            INSERT INTO transacciones (usuario_id, concepto, monto, tipo, categoria, imagen_path) 
+            VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`;
+        
+        const result = await pool.query(query, [
+            usuario_id, concepto, monto, tipo, categoria, imagenPath
+        ]);
+        
+        res.status(201).json(result.rows);
+    } catch (err) {
+        console.error("Error al guardar:", err);
+        res.status(500).json({ error: "Error en el servidor" });
     }
 });
 app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`));

@@ -214,26 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    document.getElementById('transaccionForm')?.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const transData = {
-            usuario_id: auth.getUsuarioId(),
-            concepto: document.getElementById('concepto').value,
-            monto: document.getElementById('monto').value,
-            tipo: document.getElementById('tipo').value,
-            categoria: document.getElementById('categoria').value
-        };
-
-        try {
-            if (transaccionEditandoId) {
-                await api.actualizarTransaccion(transaccionEditandoId, transData, auth.getToken());
-            } else {
-                await api.guardarTransaccion(transData, auth.getToken());
-            }
-            cerrarModalTransaccion();
-            await cargarTransacciones(); 
-        } catch (err) { alert("Error: " + err.message); }
-    });
     document.getElementById('lista-usuarios')?.addEventListener('change', async (e) => {
         if (e.target.classList.contains('rol-select')) {
             const id = e.target.getAttribute('data-id');
@@ -291,6 +271,29 @@ document.addEventListener('DOMContentLoaded', () => {
             mostrarLogin(); 
         } catch (err) { 
             alert("Error al registrar: " + err.message); 
+        }
+    });
+    document.getElementById('transaccionForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('usuario_id', auth.getUsuarioId());
+        formData.append('concepto', document.getElementById('concepto').value);
+        formData.append('monto', document.getElementById('monto').value);
+        formData.append('tipo', document.getElementById('tipo').value);
+        formData.append('categoria', document.getElementById('categoria').value);
+        
+        const fileInput = document.getElementById('recibo');
+        if (fileInput && fileInput.files && fileInput.files.length > 0) {
+            formData.append('imagen', fileInput.files[0]); 
+        }
+        try {
+            await api.guardarTransaccion(formData, auth.getToken());
+            alert("Guardado con éxito");
+            cerrarModalTransaccion();
+            await cargarTransacciones(); 
+        } catch (err) { 
+            alert("Error: " + err.message); 
         }
     });
 });

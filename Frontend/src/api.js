@@ -100,5 +100,20 @@ export const api = {
             throw new Error("Error al actualizar el rol");
         }
         return response.json();
+    },
+guardarTransaccion: async (formData, token) => {
+    const response = await fetch(`${API_URL}/transacciones`, {
+        method: 'POST',
+        headers: { 
+            'Authorization': `Bearer ${token}` 
+        },
+        body: formData 
+    });
+    
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error('Error al guardar: ' + errorText);
     }
+    return await response.json();
+},
 };
