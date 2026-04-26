@@ -299,9 +299,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (fileInput && fileInput.files && fileInput.files.length > 0) {
             formData.append('imagen', fileInput.files[0]); 
         }
+    
         try {
-            await api.guardarTransaccion(formData, auth.getToken());
-            alert("Guardado con éxito");
+            // --- AQUÍ ESTÁ LA CORRECCIÓN ---
+            if (transaccionEditandoId) {
+                // Si hay un ID, llamamos a la función de actualizar
+                await api.actualizarTransaccion(transaccionEditandoId, formData, auth.getToken());
+                alert("Actualizado con éxito");
+            } else {
+                // Si no hay ID, es una nueva, llamamos a guardar
+                await api.guardarTransaccion(formData, auth.getToken());
+                alert("Guardado con éxito");
+            }
+            // -------------------------------
+            
             cerrarModalTransaccion();
             await cargarTransacciones(); 
         } catch (err) { 

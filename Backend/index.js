@@ -5,10 +5,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const app = express();
-app.use(cors());
-app.use(express.json());
 const multer = require('multer');
 const path = require('path');
+app.use(cors());
+app.use(express.json());
+
+const storage = multer.diskStorage({
+    destination: './uploads/', 
+    filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname));
+    }
+  });
+const upload = multer({ storage: storage });
 
 const PORT = process.env.PORT || 3000;
 
@@ -120,21 +128,27 @@ app.delete('/transacciones/:id', verificarToken, async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
-app.put('/transacciones/:id', verificarToken, async (req, res) => {
+app.put('/transacciones/:id', verificarToken, upload.single('imagen'), async (req, res) => {
     const { id } = req.params;
-    const { concepto, monto, tipo, categoria } = req.body;
+    const { concepto, monto, tipo, categoria } = req.body; 
 
     try {
-        const query = `
-            UPDATE transacciones 
-            SET concepto = $1, monto = $2, tipo = $3, categoria = $4 
-            WHERE id = $5
-        `;
+        let query;
+        let params;
+
+        if (req.file) {
+            const imagenPath = `/uploads/${req.file.filename}`;
+            query = `UPDATE transacciones SET concepto = $1, monto = $2, tipo = $3, categoria = $4, imagen_path = $5 WHERE id = $6`;
+            params = [concepto, monto, tipo, categoria, imagenPath, id];
+        } else {
+            query = `UPDATE transacciones SET concepto = $1, monto = $2, tipo = $3, categoria = $4 WHERE id = $5`;
+            params = [concepto, monto, tipo, categoria, id];
+        }
         
-        const result = await pool.query(query, [concepto, monto, tipo, categoria, id]);
+        const result = await pool.query(query, params);
 
         if (result.rowCount === 0) {
-            return res.status(404).json({ error: "No se encontró la transacción para actualizar" });
+            return res.status(404).json({ error: "No se encontró la transacción" });
         }
 
         res.json({ message: "Transacción actualizada con éxito" });
@@ -184,14 +198,6 @@ app.delete('/usuarios/:id', verificarToken, async (req, res) => {
 });
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-const storage = multer.diskStorage({
-  destination: './uploads/', 
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-const upload = multer({ storage: storage });
 
 app.post('/transacciones', verificarToken, upload.single('imagen'), async (req, res) => {
     try {

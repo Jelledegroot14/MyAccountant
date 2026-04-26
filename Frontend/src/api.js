@@ -116,4 +116,18 @@ export const api = {
         }
         return await response.json();
     },
+    // En tu archivo api.js
+    actualizarTransaccion: async (id, formData, token) => {
+        // Es vital que el endpoint sea algo como /transacciones/123
+        const response = await fetch(`http://localhost:3000/transacciones/${id}`, {
+            method: 'PUT',
+            headers: { 
+                'Authorization': `Bearer ${token}` 
+            },
+            body: formData // FormData gestiona el multipart/form-data automáticamente
+        });
+
+        if (!response.ok) throw new Error("No se pudo actualizar");
+        return await response.json();
+    },
 };
