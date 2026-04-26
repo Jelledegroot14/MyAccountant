@@ -53,20 +53,32 @@ const cargarTransacciones = async () => {
             if (esGasto) totalGastos += monto; 
             else totalIngresos += monto;
             
+            let iconoRecibo = '';
+            if (t.imagen_path) {
+                const rutaLimpia = t.imagen_path.replace(/^\/+/, '');
+                const urlImagen = `http://localhost:3000/${rutaLimpia}`;
+                
+                iconoRecibo = `
+                    <a href="${urlImagen}" target="_blank" class="btn-recibo" title="Ver recibo">
+                        <i class="fas fa-receipt"></i>
+                    </a>
+                `;
+            }
+        
             const li = document.createElement('li');
             li.innerHTML = `
             <span>${t.concepto} (${t.categoria || 'N/A'})</span>
             <span class="monto-valor ${esGasto ? 'text-gasto' : 'text-ingreso'}">
                 ${esGasto ? '-' : '+'}${monto.toFixed(2)}€
             </span>
-            <div>
+            <div class="acciones-fila" style="display: flex; gap: 10px; align-items: center;">
+                ${iconoRecibo} 
                 <button class="btn-editar" data-id="${t.id}" data-concepto="${t.concepto}" data-monto="${t.monto}" data-tipo="${t.tipo}" data-categoria="${t.categoria}">✎</button>
                 <button class="btn-eliminar" data-id="${t.id}">×</button>
             </div>
         `;
             lista.appendChild(li);
         });
-
         const saldoFinal = totalIngresos - totalGastos;
         const saldoElement = document.getElementById('saldo-total');
         saldoElement.innerText = `${saldoFinal.toFixed(2)}€`;

@@ -7,6 +7,8 @@ require('dotenv').config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+const multer = require('multer');
+const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
@@ -180,8 +182,8 @@ app.delete('/usuarios/:id', verificarToken, async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
-const multer = require('multer');
-const path = require('path');
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const storage = multer.diskStorage({
   destination: './uploads/', 
