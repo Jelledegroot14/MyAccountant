@@ -1,8 +1,13 @@
-import { api } from './api.js';
+import { api, SesionExpiradaError } from './api.js';
 import { auth } from './auth.js';
 import { inicializarGrafico } from './chart-logic.js';
 
-let transaccionEditandoId = null; 
+let transaccionEditandoId = null;
+
+const mostrarError = (mensaje, err) => {
+    if (err instanceof SesionExpiradaError) return; // the sesion-expirada listener already alerted
+    alert(`${mensaje}: ${err.message}`);
+};
 
 const cargarUsuarios = async () => {
     const listaUsuarios = document.getElementById('lista-usuarios');
@@ -11,7 +16,7 @@ const cargarUsuarios = async () => {
 
     try {
         const usuarios = await api.getUsuarios(token);
-        listaUsuarios.innerHTML = ''; 
+        listaUsuarios.innerHTML = '';
         usuarios.forEach(u => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
@@ -19,7 +24,7 @@ const cargarUsuarios = async () => {
                 <td>${u.email}</td>
                 <td>
                     <select class="rol-select" data-id="${u.id}">
-                        <option value="user" ${u.rol === 'user' ? 'selected' : ''}>User</option>
+                        <option value="usuario" ${u.rol === 'usuario' ? 'selected' : ''}>Usuario</option>
                         <option value="admin" ${u.rol === 'admin' ? 'selected' : ''}>Admin</option>
                     </select>
                 </td>
@@ -27,7 +32,7 @@ const cargarUsuarios = async () => {
             `;
             listaUsuarios.appendChild(tr);
         });
-    } catch (err) { alert("Error al cargar usuarios: " + err.message); }
+    } catch (err) { mostrarError("Error al cargar usuarios", err); }
 };
 
 const cargarTransacciones = async () => {
@@ -55,13 +60,10 @@ const cargarTransacciones = async () => {
             
             let iconoRecibo = '';
             if (t.imagen_path) {
-                const rutaLimpia = t.imagen_path.replace(/^\/+/, '');
-                const urlImagen = `http://localhost:3000/${rutaLimpia}`;
-                
                 iconoRecibo = `
-                    <a href="${urlImagen}" target="_blank" class="btn-recibo" title="Ver recibo">
+                    <button type="button" class="btn-recibo" data-id="${t.id}" title="Ver recibo">
                         <i class="fas fa-receipt"></i>
-                    </a>
+                    </button>
                 `;
             }
         
@@ -122,7 +124,7 @@ const actualizarInfoUsuario = () => {
     const userRoleElement = document.getElementById('user-role');
     
     const nombre = localStorage.getItem('nombre') || 'Usuario';
-    const rol = localStorage.getItem('rol') || 'user';
+    const rol = localStorage.getItem('rol') || 'usuario';
 
     if (userNameElement && userRoleElement) {
         userNameElement.textContent = nombre;
@@ -141,6 +143,11 @@ const actualizarInfoUsuario = () => {
         document.getElementById('login-form-box').style.display = 'block';
         document.getElementById('register-form-box').style.display = 'none';
     };
+
+window.addEventListener('sesion-expirada', () => {
+    alert('Tu sesión ha expirado. Inicia sesión de nuevo.');
+    gestionarUI();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     gestionarUI();
@@ -169,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     await cargarUsuarios(); 
                     
                 } catch (err) {
-                    alert("Error al eliminar: " + err.message);
+                    mostrarError("Error al eliminar", err);
                 }
             }
         }
@@ -237,22 +244,39 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 alert("Rol actualizado correctamente.");
             } catch (err) {
-                alert("Error al actualizar el rol: " + err.message);
-                cargarUsuarios(); 
+                mostrarError("Error al actualizar el rol", err);
+                cargarUsuarios();
             }
         }
     });
 
     document.getElementById('lista-transacciones')?.addEventListener('click', async (e) => {
+        const botonRecibo = e.target.closest('.btn-recibo');
+        if (botonRecibo) {
+            try {
+                const blob = await api.getRecibo(botonRecibo.getAttribute('data-id'), auth.getToken());
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                setTimeout(() => URL.revokeObjectURL(url), 60000);
+            } catch (err) {
+                mostrarError("No se pudo cargar el recibo", err);
+            }
+            return;
+        }
+
         const id = e.target.getAttribute('data-id');
-        
+
         if (e.target.classList.contains('btn-eliminar')) {
             if (confirm("¿Eliminar este movimiento?")) {
-                await api.eliminarTransaccion(id, auth.getToken());
-                await cargarTransacciones();
+                try {
+                    await api.eliminarTransaccion(id, auth.getToken());
+                    await cargarTransacciones();
+                } catch (err) {
+                    mostrarError("Error al eliminar", err);
+                }
             }
         }
-        
+
         if (e.target.classList.contains('btn-editar')) {
             transaccionEditandoId = id;
             if(modalTitulo) modalTitulo.innerText = "Editar Transacción";
@@ -310,8 +334,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }            
             cerrarModalTransaccion();
             await cargarTransacciones(); 
-        } catch (err) { 
-            alert("Error: " + err.message); 
+        } catch (err) {
+            mostrarError("Error", err);
         }
     });
 });

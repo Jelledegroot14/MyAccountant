@@ -20,6 +20,9 @@ export const auth = {
     },
 
     clearSession() {
-        localStorage.clear();
+        localStorage.removeItem('token');
+        localStorage.removeItem('usuarioId');
+        localStorage.removeItem('rol');
+        localStorage.removeItem('nombre');
     }
 };
