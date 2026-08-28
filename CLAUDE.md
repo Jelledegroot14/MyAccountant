@@ -16,13 +16,14 @@ Run each from its respective directory (`Backend/` or `Frontend/`).
 Backend:
 - `node index.js` — start the API server (no dev/watch script defined in package.json; use `npx nodemon index.js` for auto-reload since `nodemon` is already a devDependency).
 - No lint/test scripts are configured (`npm test` is a stub that exits with an error).
-- Requires a `.env` file with: `PORT`, `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`, `JWT_SECRET`.
+- Requires a `.env` file with: `PORT`, `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`, `JWT_SECRET` (see `Backend/.env.example`).
 
 Frontend:
 - `npm run dev` — Vite dev server.
 - `npm run build` — production build (`vite build`) to `Frontend/dist`.
 - `npm run preview` — serve the production build locally.
 - No lint/test scripts are configured.
+- Optional `.env` with `VITE_API_URL` to point at a non-default backend (see `Frontend/.env.example`); defaults to `http://localhost:3000`.
 
 ## Architecture
 
@@ -43,7 +44,7 @@ The Vue scaffolding (`App.vue`, `src/router/`, `src/components/`, `src/stores/co
 
 Key real files:
 - `src/main.js` — all UI event wiring and DOM rendering logic (login, register, transaction list/CRUD, admin panel, logout).
-- `src/api.js` — fetch wrappers for every backend endpoint. Base URLs are hardcoded to `http://localhost:3000`. Note there are duplicate method definitions for `guardarTransaccion`/`actualizarTransaccion` (a JSON version and a later `FormData` version); the second definition in the object literal wins at runtime (the `FormData` ones, used for the receipt-upload flow).
+- `src/api.js` — fetch wrappers for every backend endpoint. Base URL comes from `VITE_API_URL` (see `Frontend/.env.example`), falling back to `http://localhost:3000` if unset. Note there are duplicate method definitions for `guardarTransaccion`/`actualizarTransaccion` (a JSON version and a later `FormData` version); the second definition in the object literal wins at runtime (the `FormData` ones, used for the receipt-upload flow).
 - `src/auth.js` — thin wrapper around `localStorage` for `token`/`usuarioId`/`rol` (session state, not Vuex/Pinia).
 - `src/chart-logic.js` — builds the category-spending doughnut chart with Chart.js and a hand-rolled legend; expects a global `Chart` (from the CDN script, not an npm import).
 
