@@ -15,8 +15,8 @@ Run each from its respective directory (`Backend/` or `Frontend/`).
 
 Backend:
 - `node index.js` — start the API server (no dev/watch script defined in package.json; use `npx nodemon index.js` for auto-reload since `nodemon` is already a devDependency).
-- No lint/test scripts are configured (`npm test` is a stub that exits with an error).
-- Requires a `.env` file with: `PORT`, `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`, `JWT_SECRET` (see `Backend/.env.example`).
+- `npm test` — runs the `Backend/test/*.test.js` suite via Node's built-in test runner (`node --test`) plus `supertest`. No lint is configured.
+- Requires a `.env` file with: `PORT`, `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`, `JWT_SECRET` (see `Backend/.env.example`). Tests don't need a real database or `.env` — `pool.query` is mocked per-test (see `Backend/test/helpers/`) and `Backend/test/setup.js` sets a fixed `JWT_SECRET`.
 
 Frontend:
 - `npm run dev` — Vite dev server.
