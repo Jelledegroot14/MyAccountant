@@ -1,28 +1,37 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "node --require ./test/setup.js --test test/*.test.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.6",
-    "dotenv": "^17.4.0",
-    "express": "^5.2.1",
-    "express-rate-limit": "^8.6.2",
-    "jsonwebtoken": "^9.0.3",
-    "multer": "^2.2.0",
-    "pg": "^8.20.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.14",
-    "supertest": "^7.2.2"
-  }
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "dev": "nodemon index.js",
+        "test": "node --require ./test/setup.js --test test/*.test.js",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "format": "prettier --write .",
+        "format:check": "prettier --check ."
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "cors": "^2.8.6",
+        "dotenv": "^17.4.0",
+        "express": "^5.2.1",
+        "express-rate-limit": "^8.6.2",
+        "jsonwebtoken": "^9.0.3",
+        "multer": "^2.2.0",
+        "pg": "^8.20.0"
+    },
+    "devDependencies": {
+        "@eslint/js": "^10.0.1",
+        "eslint": "^10.9.1",
+        "eslint-config-prettier": "^10.1.8",
+        "globals": "^17.11.0",
+        "nodemon": "^3.1.14",
+        "prettier": "^3.9.6",
+        "supertest": "^7.2.2"
+    }
 }
