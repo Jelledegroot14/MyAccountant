@@ -2,41 +2,41 @@ const COLORES_CATEGORIAS = {
     Vivienda: '#4361ee',
     Comida: '#4cc9f0',
     Ocio: '#ff8000',
-    Otros: '#4895ef'
+    Otros: '#4895ef',
 };
 
 const ICONOS_CATEGORIAS = {
     Vivienda: 'fa-solid fa-house',
     Comida: 'fa-solid fa-utensils',
     Ocio: 'fa-solid fa-gamepad',
-    Otros: 'fa-solid fa-ellipsis'
+    Otros: 'fa-solid fa-ellipsis',
 };
 
 let miGrafico = null;
 
 export const inicializarGrafico = (datosTransacciones) => {
     const ctx = document.getElementById('chartGastos');
-    const overlay = document.getElementById('center-text-overlay'); 
+    const overlay = document.getElementById('center-text-overlay');
     if (!ctx) return;
 
     const gastosPorCategoria = datosTransacciones
-        .filter(t => t.tipo === 'gasto')
+        .filter((t) => t.tipo === 'gasto')
         .reduce((acumulador, t) => {
             let cat = t.categoria || 'Otros';
-            if (cat === 'Alimentación') cat = 'Comida'; 
-            
+            if (cat === 'Alimentación') cat = 'Comida';
+
             const monto = parseFloat(t.monto) || 0;
             acumulador[cat] = (acumulador[cat] || 0) + monto;
             return acumulador;
         }, {});
 
-    const totalGastos = Object.values(gastosPorCategoria).reduce((a, b) => a + b, 0);    
+    const totalGastos = Object.values(gastosPorCategoria).reduce((a, b) => a + b, 0);
     if (overlay) {
         overlay.innerText = `${totalGastos.toFixed(2)}€`;
     }
     const labels = Object.keys(gastosPorCategoria);
     const dataValues = Object.values(gastosPorCategoria);
-    const backgroundColors = labels.map(label => COLORES_CATEGORIAS[label] || '#ccc');
+    const backgroundColors = labels.map((label) => COLORES_CATEGORIAS[label] || '#ccc');
 
     if (miGrafico) miGrafico.destroy();
 
@@ -44,12 +44,14 @@ export const inicializarGrafico = (datosTransacciones) => {
         type: 'doughnut',
         data: {
             labels: labels,
-            datasets: [{
-                data: dataValues,
-                backgroundColor: backgroundColors,
-                borderWidth: 0,
-                hoverOffset: 4
-            }]
+            datasets: [
+                {
+                    data: dataValues,
+                    backgroundColor: backgroundColors,
+                    borderWidth: 0,
+                    hoverOffset: 4,
+                },
+            ],
         },
         options: {
             cutout: '70%',
@@ -57,13 +59,13 @@ export const inicializarGrafico = (datosTransacciones) => {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: (context) => `${context.label}: ${context.raw.toFixed(2)}€`
-                    }
-                }
+                        label: (context) => `${context.label}: ${context.raw.toFixed(2)}€`,
+                    },
+                },
             },
             responsive: true,
-            maintainAspectRatio: false
-        }
+            maintainAspectRatio: false,
+        },
     });
 
     crearLeyendaPersonalizada(gastosPorCategoria);
@@ -76,7 +78,7 @@ const crearLeyendaPersonalizada = (gastosPorCategoria) => {
     Object.entries(gastosPorCategoria).forEach(([cat, monto]) => {
         const color = COLORES_CATEGORIAS[cat] || '#ccc';
         const iconoClase = ICONOS_CATEGORIAS[cat] || 'fa-solid fa-question';
-        
+
         leyendaHTML += `
             <div class="legend-item">
                 <span class="legend-icon" style="color: ${color}">

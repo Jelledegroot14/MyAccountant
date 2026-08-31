@@ -17,7 +17,7 @@ const cargarUsuarios = async () => {
     try {
         const usuarios = await api.getUsuarios(token);
         listaUsuarios.innerHTML = '';
-        usuarios.forEach(u => {
+        usuarios.forEach((u) => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${u.nombre}</td>
@@ -32,7 +32,9 @@ const cargarUsuarios = async () => {
             `;
             listaUsuarios.appendChild(tr);
         });
-    } catch (err) { mostrarError("Error al cargar usuarios", err); }
+    } catch (err) {
+        mostrarError('Error al cargar usuarios', err);
+    }
 };
 
 const cargarTransacciones = async () => {
@@ -48,16 +50,16 @@ const cargarTransacciones = async () => {
         const lista = document.getElementById('lista-transacciones');
         if (!lista) return;
 
-        lista.innerHTML = ''; 
+        lista.innerHTML = '';
         let totalIngresos = 0;
         let totalGastos = 0;
 
-        datos.forEach(t => {
+        datos.forEach((t) => {
             const monto = parseFloat(t.monto) || 0;
-            const esGasto = (t.tipo === 'gasto');
-            if (esGasto) totalGastos += monto; 
+            const esGasto = t.tipo === 'gasto';
+            if (esGasto) totalGastos += monto;
             else totalIngresos += monto;
-            
+
             let iconoRecibo = '';
             if (t.imagen_path) {
                 iconoRecibo = `
@@ -66,7 +68,7 @@ const cargarTransacciones = async () => {
                     </button>
                 `;
             }
-        
+
             const li = document.createElement('li');
             li.innerHTML = `
             <span>${t.concepto} (${t.categoria || 'N/A'})</span>
@@ -91,12 +93,14 @@ const cargarTransacciones = async () => {
             saldoElement.classList.add('balance-negativo');
             saldoElement.classList.remove('balance-positivo');
         }
-        
+
         document.getElementById('total-ingresos').innerText = `${totalIngresos.toFixed(2)}€`;
         document.getElementById('total-gastos').innerText = `${totalGastos.toFixed(2)}€`;
-        
+
         inicializarGrafico(datos);
-    } catch (err) { console.error("Error al cargar:", err); }
+    } catch (err) {
+        console.error('Error al cargar:', err);
+    }
 };
 
 const gestionarUI = () => {
@@ -107,42 +111,42 @@ const gestionarUI = () => {
 
     if (auth.isLogged()) {
         seccionAuth.style.display = 'none';
-        seccionMovimientos.style.display = 'grid'; 
-        if(btnLogout) btnLogout.style.display = 'block';
+        seccionMovimientos.style.display = 'grid';
+        if (btnLogout) btnLogout.style.display = 'block';
         actualizarInfoUsuario();
-        if(btnAdminView) btnAdminView.style.display = auth.isAdmin() ? 'block' : 'none';
+        if (btnAdminView) btnAdminView.style.display = auth.isAdmin() ? 'block' : 'none';
         cargarTransacciones();
     } else {
-        seccionAuth.style.display = 'flex'; 
+        seccionAuth.style.display = 'flex';
         seccionMovimientos.style.display = 'none';
-        if(btnLogout) btnLogout.style.display = 'none';
-        if(btnAdminView) btnAdminView.style.display = 'none';
+        if (btnLogout) btnLogout.style.display = 'none';
+        if (btnAdminView) btnAdminView.style.display = 'none';
     }
 };
 const actualizarInfoUsuario = () => {
     const userNameElement = document.getElementById('user-name');
     const userRoleElement = document.getElementById('user-role');
-    
+
     const nombre = localStorage.getItem('nombre') || 'Usuario';
     const rol = localStorage.getItem('rol') || 'usuario';
 
     if (userNameElement && userRoleElement) {
         userNameElement.textContent = nombre;
         userRoleElement.textContent = rol.toUpperCase();
-        
-        userRoleElement.style.backgroundColor = (rol === 'admin') ? '#9333ea' : '#64748b';
+
+        userRoleElement.style.backgroundColor = rol === 'admin' ? '#9333ea' : '#64748b';
     }
 };
 
-    window.mostrarRegistro = () => {
-        document.getElementById('login-form-box').style.display = 'none';
-        document.getElementById('register-form-box').style.display = 'block';
-    };
+window.mostrarRegistro = () => {
+    document.getElementById('login-form-box').style.display = 'none';
+    document.getElementById('register-form-box').style.display = 'block';
+};
 
-    window.mostrarLogin = () => {
-        document.getElementById('login-form-box').style.display = 'block';
-        document.getElementById('register-form-box').style.display = 'none';
-    };
+window.mostrarLogin = () => {
+    document.getElementById('login-form-box').style.display = 'block';
+    document.getElementById('register-form-box').style.display = 'none';
+};
 
 window.addEventListener('sesion-expirada', () => {
     alert('Tu sesión ha expirado. Inicia sesión de nuevo.');
@@ -167,16 +171,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('lista-usuarios')?.addEventListener('click', async (e) => {
         if (e.target.classList.contains('btn-eliminar-usuario')) {
             const id = e.target.getAttribute('data-id');
-            
-            if (confirm("¿Estás seguro de eliminar este usuario?")) {
+
+            if (confirm('¿Estás seguro de eliminar este usuario?')) {
                 try {
                     await api.eliminarUsuario(id, auth.getToken());
-                    
-                    alert("Usuario eliminado correctamente.");
-                    await cargarUsuarios(); 
-                    
+
+                    alert('Usuario eliminado correctamente.');
+                    await cargarUsuarios();
                 } catch (err) {
-                    mostrarError("Error al eliminar", err);
+                    mostrarError('Error al eliminar', err);
                 }
             }
         }
@@ -184,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modalTrans = document.getElementById('modal-transaccion');
     const modalHist = document.getElementById('modal-historial');
-    const modalTitulo = document.getElementById('modal-titulo'); 
+    const modalTitulo = document.getElementById('modal-titulo');
 
     const cerrarModalTransaccion = () => {
         transaccionEditandoId = null;
@@ -198,11 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-open-modal')?.addEventListener('click', () => {
         transaccionEditandoId = null;
-        if(modalTitulo) modalTitulo.innerText = "Nueva Transacción";
+        if (modalTitulo) modalTitulo.innerText = 'Nueva Transacción';
         modalTrans?.classList.add('active');
     });
 
-    document.getElementById('btn-open-historial')?.addEventListener('click', () => modalHist?.classList.add('active'));
+    document
+        .getElementById('btn-open-historial')
+        ?.addEventListener('click', () => modalHist?.classList.add('active'));
     document.getElementById('close-transaccion')?.addEventListener('click', cerrarModalTransaccion);
     document.getElementById('close-historial')?.addEventListener('click', cerrarModalHistorial);
 
@@ -210,26 +215,25 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-        
 
         try {
             const data = await api.login(email, password);
-            
+
             if (data && data.user) {
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('nombre', data.user.nombre); 
-                localStorage.setItem('rol', data.user.rol);     
-                localStorage.setItem('usuarioId', data.user.id); 
+                localStorage.setItem('nombre', data.user.nombre);
+                localStorage.setItem('rol', data.user.rol);
+                localStorage.setItem('usuarioId', data.user.id);
 
-                console.log("Sesión guardada:", { 
-                    nombre: localStorage.getItem('nombre'), 
-                    rol: localStorage.getItem('rol') 
+                console.log('Sesión guardada:', {
+                    nombre: localStorage.getItem('nombre'),
+                    rol: localStorage.getItem('rol'),
                 });
 
-                gestionarUI(); 
+                gestionarUI();
             }
-        } catch (err) { 
-            alert("Error al iniciar sesión: " + err.message); 
+        } catch (err) {
+            alert('Error al iniciar sesión: ' + err.message);
         }
     });
 
@@ -237,14 +241,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.classList.contains('rol-select')) {
             const id = e.target.getAttribute('data-id');
             const nuevoRol = e.target.value;
-            
-            try {
 
+            try {
                 await api.actualizarRol(id, nuevoRol, auth.getToken());
-                
-                alert("Rol actualizado correctamente.");
+
+                alert('Rol actualizado correctamente.');
             } catch (err) {
-                mostrarError("Error al actualizar el rol", err);
+                mostrarError('Error al actualizar el rol', err);
                 cargarUsuarios();
             }
         }
@@ -254,12 +257,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const botonRecibo = e.target.closest('.btn-recibo');
         if (botonRecibo) {
             try {
-                const blob = await api.getRecibo(botonRecibo.getAttribute('data-id'), auth.getToken());
+                const blob = await api.getRecibo(
+                    botonRecibo.getAttribute('data-id'),
+                    auth.getToken(),
+                );
                 const url = URL.createObjectURL(blob);
                 window.open(url, '_blank');
                 setTimeout(() => URL.revokeObjectURL(url), 60000);
             } catch (err) {
-                mostrarError("No se pudo cargar el recibo", err);
+                mostrarError('No se pudo cargar el recibo', err);
             }
             return;
         }
@@ -267,19 +273,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = e.target.getAttribute('data-id');
 
         if (e.target.classList.contains('btn-eliminar')) {
-            if (confirm("¿Eliminar este movimiento?")) {
+            if (confirm('¿Eliminar este movimiento?')) {
                 try {
                     await api.eliminarTransaccion(id, auth.getToken());
                     await cargarTransacciones();
                 } catch (err) {
-                    mostrarError("Error al eliminar", err);
+                    mostrarError('Error al eliminar', err);
                 }
             }
         }
 
         if (e.target.classList.contains('btn-editar')) {
             transaccionEditandoId = id;
-            if(modalTitulo) modalTitulo.innerText = "Editar Transacción";
+            if (modalTitulo) modalTitulo.innerText = 'Editar Transacción';
             document.getElementById('concepto').value = e.target.getAttribute('data-concepto');
             document.getElementById('monto').value = e.target.getAttribute('data-monto');
             document.getElementById('tipo').value = e.target.getAttribute('data-tipo');
@@ -289,53 +295,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-logout')?.addEventListener('click', () => {
-        auth.clearSession(); 
+        auth.clearSession();
         window.location.reload();
     });
     document.getElementById('registerForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const nombre = document.getElementById('reg-nombre').value;
         const email = document.getElementById('reg-email').value;
         const password = document.getElementById('reg-password').value;
 
         try {
             await api.register(nombre, email, password);
-            
-            alert("¡Registro exitoso! Ya puedes iniciar sesión.");
-            document.getElementById('registerForm').reset(); 
-            mostrarLogin(); 
-        } catch (err) { 
-            alert("Error al registrar: " + err.message); 
+
+            alert('¡Registro exitoso! Ya puedes iniciar sesión.');
+            document.getElementById('registerForm').reset();
+            window.mostrarLogin();
+        } catch (err) {
+            alert('Error al registrar: ' + err.message);
         }
     });
     document.getElementById('transaccionForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const formData = new FormData();
         formData.append('usuario_id', auth.getUsuarioId());
         formData.append('concepto', document.getElementById('concepto').value);
         formData.append('monto', document.getElementById('monto').value);
         formData.append('tipo', document.getElementById('tipo').value);
         formData.append('categoria', document.getElementById('categoria').value);
-        
+
         const fileInput = document.getElementById('recibo');
         if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            formData.append('imagen', fileInput.files[0]); 
+            formData.append('imagen', fileInput.files[0]);
         }
-    
+
         try {
             if (transaccionEditandoId) {
                 await api.actualizarTransaccion(transaccionEditandoId, formData, auth.getToken());
-                alert("Actualizado con éxito");
+                alert('Actualizado con éxito');
             } else {
                 await api.guardarTransaccion(formData, auth.getToken());
-                alert("Guardado con éxito");
-            }            
+                alert('Guardado con éxito');
+            }
             cerrarModalTransaccion();
-            await cargarTransacciones(); 
+            await cargarTransacciones();
         } catch (err) {
-            mostrarError("Error", err);
+            mostrarError('Error', err);
         }
     });
 });

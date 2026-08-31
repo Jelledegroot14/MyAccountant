@@ -11,7 +11,8 @@ router.get('/', verificarToken, esAdmin, async (req, res) => {
         const result = await pool.query('SELECT id, nombre, email, rol FROM usuarios');
         res.json(result.rows);
     } catch (err) {
-        res.status(500).json({ error: "Error al obtener usuarios" });
+        console.error('Error al obtener usuarios:', err);
+        res.status(500).json({ error: 'Error al obtener usuarios' });
     }
 });
 
@@ -22,9 +23,10 @@ router.put('/:id', verificarToken, esAdmin, async (req, res) => {
     }
     try {
         await pool.query('UPDATE usuarios SET rol = $1 WHERE id = $2', [rol, req.params.id]);
-        res.json({ message: "Rol actualizado" });
+        res.json({ message: 'Rol actualizado' });
     } catch (err) {
-        res.status(500).json({ error: "Error al actualizar" });
+        console.error('Error al actualizar el rol:', err);
+        res.status(500).json({ error: 'Error al actualizar' });
     }
 });
 
@@ -34,13 +36,13 @@ router.delete('/:id', verificarToken, esAdmin, async (req, res) => {
         const result = await pool.query('DELETE FROM usuarios WHERE id = $1', [id]);
 
         if (result.rowCount === 0) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
+            return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        res.json({ message: "Usuario eliminado con éxito" });
+        res.json({ message: 'Usuario eliminado con éxito' });
     } catch (err) {
-        console.error("Error al eliminar usuario:", err);
-        res.status(500).json({ error: "Error interno del servidor" });
+        console.error('Error al eliminar usuario:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
 

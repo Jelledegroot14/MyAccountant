@@ -9,20 +9,23 @@ MyAccountant is a personal finance tracker with two independent apps that are no
 - `Backend/` — Express 5 REST API + PostgreSQL (via `pg`), JWT auth.
 - `Frontend/` — Vite-served static site. **The real app is plain vanilla JS/DOM manipulation, not Vue**, see "Frontend architecture" below.
 
+`.github/workflows/ci.yml` runs lint + format:check + test/build for both apps independently on push/PR to `main`/`Dev`.
+
 ## Commands
 
 Run each from its respective directory (`Backend/` or `Frontend/`).
 
 Backend:
 - `node index.js` — start the API server (no dev/watch script defined in package.json; use `npx nodemon index.js` for auto-reload since `nodemon` is already a devDependency).
-- `npm test` — runs the `Backend/test/*.test.js` suite via Node's built-in test runner (`node --test`) plus `supertest`. No lint is configured.
+- `npm test` — runs the `Backend/test/*.test.js` suite via Node's built-in test runner (`node --test`) plus `supertest`.
+- `npm run lint` / `npm run lint:fix` — ESLint (flat config, `eslint.config.js`). `npm run format` / `npm run format:check` — Prettier.
 - Requires a `.env` file with: `PORT`, `DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`, `JWT_SECRET` (see `Backend/.env.example`). Tests don't need a real database or `.env` — `pool.query` is mocked per-test (see `Backend/test/helpers/`) and `Backend/test/setup.js` sets a fixed `JWT_SECRET`.
 
 Frontend:
 - `npm run dev` — Vite dev server.
 - `npm run build` — production build (`vite build`) to `Frontend/dist`.
 - `npm run preview` — serve the production build locally.
-- No lint/test scripts are configured.
+- `npm run lint` / `npm run lint:fix` — ESLint (flat config, `eslint.config.js`; treats the Chart.js CDN global as a known global). `npm run format` / `npm run format:check` — Prettier. No test script is configured.
 - Optional `.env` with `VITE_API_URL` to point at a non-default backend (see `Frontend/.env.example`); defaults to `http://localhost:3000`.
 
 ## Architecture

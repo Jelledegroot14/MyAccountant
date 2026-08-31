@@ -1,154 +1,228 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="src/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>MyAccountant</title>
-</head>
-<body>
-
-    <div id="app">
-        <header class="main-header">
-          <div id="user-info-display" class="user-info">
-              <span id="user-name" class="user-name"></span>
-              <span id="user-role" class="role-badge"></span>
-          </div>
-      
-          <div class="user-controls">
-              <button id="btn-admin-view" class="btn-header" style="display: none;">Panel Admin</button>
-              <button id="btn-logout" class="btn-header" style="display: none;">Cerrar Sesión</button>
-          </div>
-      </header>
-        <div id="auth-screen">
-          <div id="login-form-box" class="auth-card">
-              <h2>Iniciar Sesión</h2>
-              <form id="loginForm">
-                  <input type="email" id="login-email" placeholder="Email" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
-                  <input type="password" id="login-password" placeholder="Contraseña" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
-                  <button type="submit" class="btn-main">Entrar</button>
-              </form>
-              <p class="auth-link">¿No tienes cuenta? <span onclick="mostrarRegistro()">Regístrate</span></p>
-          </div>
-      
-          <div id="register-form-box" class="auth-card" style="display: none;">
-            <h2>Crear Cuenta</h2>
-            <form id="registerForm">
-                <input type="text" id="reg-nombre" placeholder="Nombre" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
-                <input type="email" id="reg-email" placeholder="Email" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
-                <input type="password" id="reg-password" placeholder="Contraseña" required style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px;">
-                <button type="submit" class="btn-main">Registrarse</button>
-            </form>
-            <p class="auth-link">¿Ya tienes cuenta? <span onclick="mostrarLogin()">Inicia sesión</span></p>
-        </div>
-      </div>
-
-        <div id="seccion-movimientos" class="dashboard-grid">
-            <div class="col-left">
-                <div class="logo-wrapper">
-                    <img src="src/assets/Logo tfg-Photoroom.png" alt="Logo" class="logo-big">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="src/style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        />
+        <title>MyAccountant</title>
+    </head>
+    <body>
+        <div id="app">
+            <header class="main-header">
+                <div id="user-info-display" class="user-info">
+                    <span id="user-name" class="user-name"></span>
+                    <span id="user-role" class="role-badge"></span>
                 </div>
 
-                <div class="card">
-                    <h3>Balance Total</h3>
-                    <h1 id="saldo-total">0.00€</h1>
-                    <div class="balance-details">
-                        <p>Ingresos: <span id="total-ingresos" style="color: #16a34a;">0.00€</span></p>
-                        <p>Gastos: <span id="total-gastos" style="color: #dc2626;">0.00€</span></p>
+                <div class="user-controls">
+                    <button id="btn-admin-view" class="btn-header" style="display: none">
+                        Panel Admin
+                    </button>
+                    <button id="btn-logout" class="btn-header" style="display: none">
+                        Cerrar Sesión
+                    </button>
+                </div>
+            </header>
+            <div id="auth-screen">
+                <div id="login-form-box" class="auth-card">
+                    <h2>Iniciar Sesión</h2>
+                    <form id="loginForm">
+                        <input
+                            type="email"
+                            id="login-email"
+                            placeholder="Email"
+                            required
+                            style="
+                                width: 100%;
+                                padding: 10px;
+                                margin: 10px 0;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                            "
+                        />
+                        <input
+                            type="password"
+                            id="login-password"
+                            placeholder="Contraseña"
+                            required
+                            style="
+                                width: 100%;
+                                padding: 10px;
+                                margin: 10px 0;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                            "
+                        />
+                        <button type="submit" class="btn-main">Entrar</button>
+                    </form>
+                    <p class="auth-link">
+                        ¿No tienes cuenta? <span onclick="mostrarRegistro()">Regístrate</span>
+                    </p>
+                </div>
+
+                <div id="register-form-box" class="auth-card" style="display: none">
+                    <h2>Crear Cuenta</h2>
+                    <form id="registerForm">
+                        <input
+                            type="text"
+                            id="reg-nombre"
+                            placeholder="Nombre"
+                            required
+                            style="
+                                width: 100%;
+                                padding: 10px;
+                                margin: 10px 0;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                            "
+                        />
+                        <input
+                            type="email"
+                            id="reg-email"
+                            placeholder="Email"
+                            required
+                            style="
+                                width: 100%;
+                                padding: 10px;
+                                margin: 10px 0;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                            "
+                        />
+                        <input
+                            type="password"
+                            id="reg-password"
+                            placeholder="Contraseña"
+                            required
+                            style="
+                                width: 100%;
+                                padding: 10px;
+                                margin: 10px 0;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                            "
+                        />
+                        <button type="submit" class="btn-main">Registrarse</button>
+                    </form>
+                    <p class="auth-link">
+                        ¿Ya tienes cuenta? <span onclick="mostrarLogin()">Inicia sesión</span>
+                    </p>
+                </div>
+            </div>
+
+            <div id="seccion-movimientos" class="dashboard-grid">
+                <div class="col-left">
+                    <div class="logo-wrapper">
+                        <img src="src/assets/Logo tfg-Photoroom.png" alt="Logo" class="logo-big" />
+                    </div>
+
+                    <div class="card">
+                        <h3>Balance Total</h3>
+                        <h1 id="saldo-total">0.00€</h1>
+                        <div class="balance-details">
+                            <p>
+                                Ingresos:
+                                <span id="total-ingresos" style="color: #16a34a">0.00€</span>
+                            </p>
+                            <p>
+                                Gastos: <span id="total-gastos" style="color: #dc2626">0.00€</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <button id="btn-open-modal" class="btn-main">+ Añadir Transacción</button>
+                    <button id="btn-open-historial" class="btn-secondary">
+                        Ver Historial Completo
+                    </button>
+                </div>
+
+                <div class="col-right">
+                    <div class="card chart-card">
+                        <h3>Gastos por Categoría</h3>
+                        <div class="chart-wrapper" style="position: relative">
+                            <canvas id="chartGastos"></canvas>
+                            <div id="center-text-overlay"></div>
+                        </div>
                     </div>
                 </div>
-                
-                <button id="btn-open-modal" class="btn-main">+ Añadir Transacción</button>
-                <button id="btn-open-historial" class="btn-secondary">Ver Historial Completo</button>
             </div>
-        
-            <div class="col-right">
-                <div class="card chart-card">
-                    <h3>Gastos por Categoría</h3>
-                    <div class="chart-wrapper" style="position: relative;">
-                        <canvas id="chartGastos"></canvas>
-                        <div id="center-text-overlay"></div>
+            <section id="seccion-admin" style="display: none">
+                <div class="admin-card">
+                    <div class="admin-header">
+                        <h2>Gestión de Usuarios</h2>
+                        <button id="btn-cerrar-admin" class="btn-volver">
+                            Volver al Dashboard
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="tabla-usuarios">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-usuarios"></tbody>
+                        </table>
                     </div>
                 </div>
+            </section>
+        </div>
+
+        <div id="modal-transaccion" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" id="close-transaccion">&times;</span>
+                <h2 id="modal-titulo">Nueva Transacción</h2>
+                <form id="transaccionForm">
+                    <div class="form-group">
+                        <label for="monto">Cantidad (€)</label>
+                        <input type="number" id="monto" placeholder="0.00" step="0.01" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="concepto">Concepto</label>
+                        <input type="text" id="concepto" placeholder="Ej: Supermercado" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoría</label>
+                        <select id="categoria">
+                            <option value="Vivienda">Vivienda</option>
+                            <option value="Comida">Comida</option>
+                            <option value="Ocio">Ocio</option>
+                            <option value="Otros">Otros</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo de movimiento</label>
+                        <select id="tipo">
+                            <option value="gasto">Gasto</option>
+                            <option value="ingreso">Ingreso</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="recibo">Subir Recibo (Imagen)</label>
+                        <input type="file" id="recibo" name="recibo" accept="image/*" />
+                    </div>
+                    <button type="submit" class="btn-main">Guardar Registro</button>
+                </form>
             </div>
         </div>
-        <section id="seccion-admin" style="display: none;">
-          <div class="admin-card">
-              <div class="admin-header">
-                  <h2>Gestión de Usuarios</h2>
-                  <button id="btn-cerrar-admin" class="btn-volver">
-                      Volver al Dashboard
-                  </button>
-              </div>
-              
-              <div class="table-container">
-                  <table id="tabla-usuarios">
-                      <thead>
-                          <tr>
-                              <th>Nombre</th>
-                              <th>Email</th>
-                              <th>Rol</th>
-                              <th>Acciones</th>
-                          </tr>
-                      </thead>
-                      <tbody id="lista-usuarios">
-                          </tbody>
-                  </table>
-              </div>
-          </div>
-      </section>
-      </div>
-    </div>
 
-    <div id="modal-transaccion" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="close-transaccion">&times;</span>
-            <h2 id="modal-titulo">Nueva Transacción</h2> 
-            <form id="transaccionForm">
-                <div class="form-group">
-                    <label for="monto">Cantidad (€)</label>
-                    <input type="number" id="monto" placeholder="0.00" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="concepto">Concepto</label>
-                    <input type="text" id="concepto" placeholder="Ej: Supermercado" required>
-                </div>
-                <div class="form-group">
-                    <label for="categoria">Categoría</label>
-                    <select id="categoria">
-                        <option value="Vivienda">Vivienda</option>
-                        <option value="Comida">Comida</option>
-                        <option value="Ocio">Ocio</option>
-                        <option value="Otros">Otros</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="tipo">Tipo de movimiento</label>
-                    <select id="tipo">
-                        <option value="gasto">Gasto</option>
-                        <option value="ingreso">Ingreso</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                  <label for="recibo">Subir Recibo (Imagen)</label>
-                  <input type="file" id="recibo" name="recibo" accept="image/*">
-              </div>
-                <button type="submit" class="btn-main">Guardar Registro</button>
-            </form>
+        <div id="modal-historial" class="modal">
+            <div class="modal-content" style="width: 600px">
+                <span id="close-historial" class="close-modal">&times;</span>
+                <h2>Historial de Transacciones</h2>
+                <ul id="lista-transacciones" class="lista-historial"></ul>
+            </div>
         </div>
-    </div>
 
-    <div id="modal-historial" class="modal">
-        <div class="modal-content" style="width: 600px;">
-            <span id="close-historial" class="close-modal">&times;</span>
-            <h2>Historial de Transacciones</h2>
-            <ul id="lista-transacciones" class="lista-historial"></ul>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
-    <script type="module" src="/src/main.js"></script>
-
-</body>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+        <script type="module" src="/src/main.js"></script>
+    </body>
 </html>

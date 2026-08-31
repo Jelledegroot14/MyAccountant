@@ -6,7 +6,7 @@ export const auth = {
     saveSession(token, usuarioId, rol) {
         localStorage.setItem('token', token);
         localStorage.setItem('usuarioId', usuarioId);
-        localStorage.setItem('rol', rol); 
+        localStorage.setItem('rol', rol);
     },
     isAdmin() {
         return localStorage.getItem('rol') === 'admin';
@@ -24,5 +24,5 @@ export const auth = {
         localStorage.removeItem('usuarioId');
         localStorage.removeItem('rol');
         localStorage.removeItem('nombre');
-    }
+    },
 };

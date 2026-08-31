@@ -18,7 +18,7 @@ test('GET /transacciones/:usuario_id', async (t) => {
         assert.equal(res.status, 401);
     });
 
-    await t.test('blocks a user from listing another user\'s transactions (IDOR)', async () => {
+    await t.test("blocks a user from listing another user's transactions (IDOR)", async () => {
         const res = await request(app)
             .get('/transacciones/1')
             .set('Authorization', `Bearer ${tokenFor(OTHER)}`);
@@ -34,7 +34,7 @@ test('GET /transacciones/:usuario_id', async (t) => {
         assert.equal(res.body.length, 1);
     });
 
-    await t.test('allows an admin to list any user\'s transactions', async (t) => {
+    await t.test("allows an admin to list any user's transactions", async (t) => {
         t.mock.method(pool, 'query', async () => ({ rows: [] }));
         const res = await request(app)
             .get('/transacciones/1')
@@ -71,9 +71,9 @@ test('PUT /transacciones/:id', async (t) => {
     });
 
     await t.test('allows the owner to edit their own transaction', async (t) => {
-        t.mock.method(pool, 'query', async (sql) => (
-            sql.includes('SELECT usuario_id') ? { rows: [{ usuario_id: OWNER.id }] } : { rows: [] }
-        ));
+        t.mock.method(pool, 'query', async (sql) =>
+            sql.includes('SELECT usuario_id') ? { rows: [{ usuario_id: OWNER.id }] } : { rows: [] },
+        );
         const res = await request(app)
             .put('/transacciones/42')
             .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
@@ -81,10 +81,10 @@ test('PUT /transacciones/:id', async (t) => {
         assert.equal(res.status, 200);
     });
 
-    await t.test('allows an admin to edit another user\'s transaction', async (t) => {
-        t.mock.method(pool, 'query', async (sql) => (
-            sql.includes('SELECT usuario_id') ? { rows: [{ usuario_id: OWNER.id }] } : { rows: [] }
-        ));
+    await t.test("allows an admin to edit another user's transaction", async (t) => {
+        t.mock.method(pool, 'query', async (sql) =>
+            sql.includes('SELECT usuario_id') ? { rows: [{ usuario_id: OWNER.id }] } : { rows: [] },
+        );
         const res = await request(app)
             .put('/transacciones/42')
             .set('Authorization', `Bearer ${tokenFor(ADMIN)}`)
@@ -118,19 +118,23 @@ test('DELETE /transacciones/:id', async (t) => {
     });
 
     await t.test('allows the owner to delete their own transaction', async (t) => {
-        t.mock.method(pool, 'query', async (sql) => (
-            sql.includes('SELECT usuario_id') ? { rows: [{ usuario_id: OWNER.id }] } : { rowCount: 1 }
-        ));
+        t.mock.method(pool, 'query', async (sql) =>
+            sql.includes('SELECT usuario_id')
+                ? { rows: [{ usuario_id: OWNER.id }] }
+                : { rowCount: 1 },
+        );
         const res = await request(app)
             .delete('/transacciones/42')
             .set('Authorization', `Bearer ${tokenFor(OWNER)}`);
         assert.equal(res.status, 200);
     });
 
-    await t.test('allows an admin to delete another user\'s transaction', async (t) => {
-        t.mock.method(pool, 'query', async (sql) => (
-            sql.includes('SELECT usuario_id') ? { rows: [{ usuario_id: OWNER.id }] } : { rowCount: 1 }
-        ));
+    await t.test("allows an admin to delete another user's transaction", async (t) => {
+        t.mock.method(pool, 'query', async (sql) =>
+            sql.includes('SELECT usuario_id')
+                ? { rows: [{ usuario_id: OWNER.id }] }
+                : { rowCount: 1 },
+        );
         const res = await request(app)
             .delete('/transacciones/42')
             .set('Authorization', `Bearer ${tokenFor(ADMIN)}`);
@@ -176,7 +180,7 @@ test('GET /transacciones/:id/recibo', async (t) => {
         assert.equal(res.body.error, 'El archivo del recibo no existe');
     });
 
-    await t.test('lets an admin past the ownership check for another user\'s receipt', async (t) => {
+    await t.test("lets an admin past the ownership check for another user's receipt", async (t) => {
         t.mock.method(pool, 'query', async () => ({
             rows: [{ usuario_id: OWNER.id, imagen_path: null }],
         }));

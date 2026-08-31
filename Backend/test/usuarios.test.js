@@ -17,13 +17,17 @@ test('GET /usuarios', async (t) => {
     });
 
     await t.test('rejects a non-admin user', async () => {
-        const res = await request(app).get('/usuarios').set('Authorization', `Bearer ${tokenFor(USER)}`);
+        const res = await request(app)
+            .get('/usuarios')
+            .set('Authorization', `Bearer ${tokenFor(USER)}`);
         assert.equal(res.status, 403);
     });
 
     await t.test('allows an admin', async (t) => {
         t.mock.method(pool, 'query', async () => ({ rows: [] }));
-        const res = await request(app).get('/usuarios').set('Authorization', `Bearer ${tokenFor(ADMIN)}`);
+        const res = await request(app)
+            .get('/usuarios')
+            .set('Authorization', `Bearer ${tokenFor(ADMIN)}`);
         assert.equal(res.status, 200);
     });
 });
@@ -68,13 +72,17 @@ test('DELETE /usuarios/:id', async (t) => {
     });
 
     await t.test('rejects a non-admin user', async () => {
-        const res = await request(app).delete('/usuarios/2').set('Authorization', `Bearer ${tokenFor(USER)}`);
+        const res = await request(app)
+            .delete('/usuarios/2')
+            .set('Authorization', `Bearer ${tokenFor(USER)}`);
         assert.equal(res.status, 403);
     });
 
     await t.test('allows an admin', async (t) => {
         t.mock.method(pool, 'query', async () => ({ rowCount: 1 }));
-        const res = await request(app).delete('/usuarios/2').set('Authorization', `Bearer ${tokenFor(ADMIN)}`);
+        const res = await request(app)
+            .delete('/usuarios/2')
+            .set('Authorization', `Bearer ${tokenFor(ADMIN)}`);
         assert.equal(res.status, 200);
     });
 });

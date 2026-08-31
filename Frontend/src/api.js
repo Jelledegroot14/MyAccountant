@@ -24,9 +24,9 @@ export const api = {
         const timestamp = new Date().getTime();
         const res = await fetch(`${API_URL}/transacciones/${usuarioId}?t=${timestamp}`, {
             headers: {
-                'Authorization': `Bearer ${token}`,
-                'Cache-Control': 'no-cache, no-store, must-revalidate'
-            }
+                Authorization: `Bearer ${token}`,
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+            },
         });
         manejarNoAutorizado(res);
         return await res.json();
@@ -34,7 +34,7 @@ export const api = {
 
     getRecibo: async (transaccionId, token) => {
         const res = await fetch(`${API_URL}/transacciones/${transaccionId}/recibo`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
         });
         manejarNoAutorizado(res);
         if (!res.ok) throw new Error('No se pudo cargar el recibo');
@@ -44,7 +44,7 @@ export const api = {
     eliminarTransaccion: async (id, token) => {
         const res = await fetch(`${API_URL}/transacciones/${id}`, {
             method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
         });
         manejarNoAutorizado(res);
         if (!res.ok) throw new Error('Error al eliminar');
@@ -54,13 +54,13 @@ export const api = {
         const response = await fetch(`${API_URL}/transacciones/${id}`, {
             method: 'PUT',
             headers: {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
-            body: formData
+            body: formData,
         });
 
         manejarNoAutorizado(response);
-        if (!response.ok) throw new Error("No se pudo actualizar");
+        if (!response.ok) throw new Error('No se pudo actualizar');
         return await response.json();
     },
 
@@ -68,7 +68,7 @@ export const api = {
         const response = await fetch(`${API_URL}/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password }),
         });
 
         if (!response.ok) {
@@ -82,11 +82,11 @@ export const api = {
         const res = await fetch(`${API_URL}/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, email, password })
+            body: JSON.stringify({ nombre, email, password }),
         });
         if (!res.ok) {
             const errorData = await res.json().catch(() => ({}));
-            throw new Error(errorData.error || "Error en el registro");
+            throw new Error(errorData.error || 'Error en el registro');
         }
         return await res.json();
     },
@@ -94,19 +94,19 @@ export const api = {
     eliminarUsuario: async (id, token) => {
         const response = await fetch(`${API_URL}/usuarios/${id}`, {
             method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
         });
         manejarNoAutorizado(response);
-        if (!response.ok) throw new Error("Error al eliminar el usuario");
+        if (!response.ok) throw new Error('Error al eliminar el usuario');
         return await response.json();
     },
 
     getUsuarios: async (token) => {
         const response = await fetch(`${API_URL}/usuarios`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
         });
         manejarNoAutorizado(response);
-        if (!response.ok) throw new Error("Error al obtener usuarios");
+        if (!response.ok) throw new Error('Error al obtener usuarios');
         return await response.json();
     },
 
@@ -115,13 +115,13 @@ export const api = {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ rol })
+            body: JSON.stringify({ rol }),
         });
 
         manejarNoAutorizado(response);
-        if (!response.ok) throw new Error("Error al actualizar el rol");
+        if (!response.ok) throw new Error('Error al actualizar el rol');
         return response.json();
     },
 
@@ -129,9 +129,9 @@ export const api = {
         const response = await fetch(`${API_URL}/transacciones`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`
+                Authorization: `Bearer ${token}`,
             },
-            body: formData
+            body: formData,
         });
 
         manejarNoAutorizado(response);
