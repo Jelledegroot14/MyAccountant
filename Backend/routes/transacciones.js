@@ -8,6 +8,24 @@ const { verificarToken } = require('../middleware/auth');
 const router = express.Router();
 
 const TIPOS_PERMITIDOS = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
+const TIPOS_MOVIMIENTO_VALIDOS = new Set(['gasto', 'ingreso']);
+const CATEGORIAS_VALIDAS = new Set(['Vivienda', 'Comida', 'Ocio', 'Otros']);
+
+const validarTransaccion = ({ concepto, monto, tipo, categoria }) => {
+    if (typeof concepto !== 'string' || concepto.trim().length === 0 || concepto.length > 255) {
+        return 'El concepto es obligatorio y debe tener como máximo 255 caracteres';
+    }
+    if (!Number.isFinite(Number(monto)) || Number(monto) <= 0) {
+        return 'El monto debe ser un número mayor que 0';
+    }
+    if (!TIPOS_MOVIMIENTO_VALIDOS.has(tipo)) {
+        return "El tipo debe ser 'gasto' o 'ingreso'";
+    }
+    if (!CATEGORIAS_VALIDAS.has(categoria)) {
+        return 'La categoría no es válida';
+    }
+    return null;
+};
 
 const storage = multer.diskStorage({
     destination: './uploads/',
@@ -65,6 +83,11 @@ router.post('/', verificarToken, upload.single('imagen'), manejarErrorSubida, as
         const { concepto, monto, tipo, categoria } = req.body;
         const usuario_id = req.usuario.id;
 
+        const errorValidacion = validarTransaccion({ concepto, monto, tipo, categoria });
+        if (errorValidacion) {
+            return res.status(400).json({ error: errorValidacion });
+        }
+
         const imagenPath = req.file ? `/uploads/${req.file.filename}` : null;
 
         const query = `
@@ -95,6 +118,11 @@ router.put(
     async (req, res) => {
         const { id } = req.params;
         const { concepto, monto, tipo, categoria } = req.body;
+
+        const errorValidacion = validarTransaccion({ concepto, monto, tipo, categoria });
+        if (errorValidacion) {
+            return res.status(400).json({ error: errorValidacion });
+        }
 
         try {
             const existente = await pool.query(

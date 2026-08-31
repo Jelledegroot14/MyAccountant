@@ -43,13 +43,80 @@ test('GET /transacciones/:usuario_id', async (t) => {
     });
 });
 
+test('POST /transacciones', async (t) => {
+    const app = buildApp();
+    const body = { concepto: 'Café', monto: 3.5, tipo: 'gasto', categoria: 'Ocio' };
+
+    await t.test('requires authentication', async () => {
+        const res = await request(app).post('/transacciones').send(body);
+        assert.equal(res.status, 401);
+    });
+
+    await t.test('rejects an empty concepto', async () => {
+        const res = await request(app)
+            .post('/transacciones')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send({ ...body, concepto: '  ' });
+        assert.equal(res.status, 400);
+    });
+
+    await t.test('rejects a non-positive monto', async () => {
+        const res = await request(app)
+            .post('/transacciones')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send({ ...body, monto: 0 });
+        assert.equal(res.status, 400);
+    });
+
+    await t.test('rejects a non-numeric monto', async () => {
+        const res = await request(app)
+            .post('/transacciones')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send({ ...body, monto: 'abc' });
+        assert.equal(res.status, 400);
+    });
+
+    await t.test('rejects an invalid tipo', async () => {
+        const res = await request(app)
+            .post('/transacciones')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send({ ...body, tipo: 'no-es-un-tipo' });
+        assert.equal(res.status, 400);
+    });
+
+    await t.test('rejects an invalid categoria', async () => {
+        const res = await request(app)
+            .post('/transacciones')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send({ ...body, categoria: 'no-es-una-categoria' });
+        assert.equal(res.status, 400);
+    });
+
+    await t.test('accepts a valid body', async (t) => {
+        t.mock.method(pool, 'query', async () => ({ rows: [{ id: 1, ...body }] }));
+        const res = await request(app)
+            .post('/transacciones')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send(body);
+        assert.equal(res.status, 201);
+    });
+});
+
 test('PUT /transacciones/:id', async (t) => {
     const app = buildApp();
-    const body = { concepto: 'Café', monto: 3.5, tipo: 'gasto', categoria: 'ocio' };
+    const body = { concepto: 'Café', monto: 3.5, tipo: 'gasto', categoria: 'Ocio' };
 
     await t.test('requires authentication', async () => {
         const res = await request(app).put('/transacciones/42').send(body);
         assert.equal(res.status, 401);
+    });
+
+    await t.test('rejects an invalid body before checking ownership', async () => {
+        const res = await request(app)
+            .put('/transacciones/42')
+            .set('Authorization', `Bearer ${tokenFor(OWNER)}`)
+            .send({ ...body, categoria: 'no-es-una-categoria' });
+        assert.equal(res.status, 400);
     });
 
     await t.test('returns 404 for a non-existent transaction', async (t) => {
